@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, ValidationPipe } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AdminRegisterReqDto } from './dto/admin-register.req.dto';
 import { Admin } from './admin.entity';
@@ -13,7 +13,7 @@ export class AdminController {
     }
 
     @Post('/create')
-    async register(@Body() adminRegister: AdminRegisterReqDto): Promise<Admin> {
+    async register(@Body(new ValidationPipe()) adminRegister: AdminRegisterReqDto): Promise<Admin> {
         return await this.adminService.register(adminRegister);
     }
 }
