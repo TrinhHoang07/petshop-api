@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Customers } from './customer.entity';
-import { Repository } from 'typeorm';
-import { CustomerRegisterReqDto } from './dto/customer-register.req.dto';
+import { Customers } from './customers.entity';
+import { Repository, UpdateResult } from 'typeorm';
+import { CustomersRegisterReqDto } from './dto/customers-register.req.dto';
+import { CustomersReqDto } from './dto/customers.req.dto';
 
 @Injectable()
 export class CustomersService {
     constructor(@InjectRepository(Customers) private customerEntity: Repository<Customers>) {}
 
-    async register(customerData: CustomerRegisterReqDto): Promise<Customers> {
+    // register customer
+    async register(customerData: CustomersRegisterReqDto): Promise<Customers> {
         const customer = new Customers();
         customer.name = customerData.name;
         customer.email = customerData.email;
@@ -17,10 +19,22 @@ export class CustomersService {
         return customer.save();
     }
 
+    // get all customers
     async getAll(): Promise<Customers[]> {
         return await this.customerEntity.find();
     }
 
+    // update customer by id
+    async updateCustomerById(id: number, data: CustomersReqDto): Promise<UpdateResult> {
+        return await this.customerEntity.update(id, data);
+    }
+
+    // delete customer by id
+    async deleteCustomerById(id: number): Promise<UpdateResult> {
+        return await this.customerEntity.softDelete(id);
+    }
+
+    // validate customer
     async checkCustomer(name: string, email: string): Promise<boolean> {
         const a = await this.customerEntity.findBy({
             name: name,

@@ -5,14 +5,16 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigAsync } from './config/typeorm.config';
 import { AdminModule } from './modules/admin/admin.module';
-import { CustomerModule } from './modules/customer/customer.module';
+import { CustomersModule } from './modules/customers/customers.module';
+import { ProductsModule } from './modules/products/products.module';
 
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
         TypeOrmModule.forRootAsync(TypeOrmConfigAsync),
         AdminModule,
-        CustomerModule,
+        CustomersModule,
+        ProductsModule,
     ],
     controllers: [AppController],
     providers: [AppService],

@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty, Length, Matches } from 'class-validator';
 import { MESSAGES, REGEX } from 'src/utils/app.util';
 
-export class CustomerRegisterReqDto {
+export class CustomersRegisterReqDto {
     @IsNotEmpty()
     name: string;
 
