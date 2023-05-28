@@ -24,6 +24,17 @@ export class CustomersService {
         return await this.customerEntity.find();
     }
 
+    // get customer by username and password
+    async getCustomerByUsernameAndPassword(username: string, password: string) {
+        console.log(username);
+        console.log(password);
+
+        return await this.customerEntity.findOneBy({
+            name: username,
+            password: password,
+        });
+    }
+
     // update customer by id
     async updateCustomerById(id: number, data: CustomersReqDto): Promise<UpdateResult> {
         return await this.customerEntity.update(id, data);

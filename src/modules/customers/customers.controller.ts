@@ -1,15 +1,29 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res, ValidationPipe } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpStatus,
+    Param,
+    Post,
+    Put,
+    Res,
+    ValidationPipe,
+    UseGuards,
+} from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { Customers } from './customers.entity';
 import { CustomersRegisterReqDto } from './dto/customers-register.req.dto';
 import { Response } from 'express';
 import { CustomersReqDto } from './dto/customers.req.dto';
 import { UpdateResult } from 'typeorm';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('customers')
 export class CustomersController {
     constructor(private customerService: CustomersService) {}
 
+    @UseGuards(AuthGuard('jwt'))
     @Get('/all')
     async getAll(): Promise<Customers[]> {
         return await this.customerService.getAll();

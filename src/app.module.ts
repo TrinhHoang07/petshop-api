@@ -7,11 +7,13 @@ import { TypeOrmConfigAsync } from './config/typeorm.config';
 import { AdminModule } from './modules/admin/admin.module';
 import { CustomersModule } from './modules/customers/customers.module';
 import { ProductsModule } from './modules/products/products.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
         TypeOrmModule.forRootAsync(TypeOrmConfigAsync),
+        AuthModule,
         AdminModule,
         CustomersModule,
         ProductsModule,
