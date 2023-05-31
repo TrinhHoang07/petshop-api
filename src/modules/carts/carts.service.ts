@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Carts } from './carts.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { CartsAddReqDto } from './dto/carts-add.req.dto';
 
 @Injectable()
@@ -36,5 +36,9 @@ export class CartsService {
         cart.quantity = data.quantity;
 
         return cart.save();
+    }
+
+    async deleteById(id: number): Promise<DeleteResult> {
+        return await this.cartService.delete(id);
     }
 }
