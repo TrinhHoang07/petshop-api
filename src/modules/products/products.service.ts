@@ -29,6 +29,12 @@ export class ProductsService {
         return await product.save();
     }
 
+    async getProductById(id: number): Promise<Products> {
+        return await this.productsService.findOneBy({
+            id: id,
+        });
+    }
+
     // update product by id
     async updateProductById(id: number, data: ProductsReqDto): Promise<UpdateResult> {
         return await this.productsService.update(id, data);

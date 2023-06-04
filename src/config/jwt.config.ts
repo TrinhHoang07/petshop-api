@@ -1,10 +1,9 @@
 import { JwtModuleOptions } from '@nestjs/jwt';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 export const jwtConfig: JwtModuleOptions = {
-    privateKey: process.env.SECRET_KEY,
-    secretOrPrivateKey: process.env.SECRET_KEY ?? '@@@@@@123AzzzAaax',
     secret: process.env.SECRET_KEY,
-
     signOptions: {
         expiresIn: '3600s',
     },

@@ -21,6 +21,12 @@ export class BlogsService {
         return blog.save();
     }
 
+    async getBlogById(id: number): Promise<Blogs> {
+        return await this.blogsService.findOneBy({
+            id: id,
+        });
+    }
+
     // update customer by id
     async updateBlogById(id: number, data: BlogsReqDto): Promise<UpdateResult> {
         return await this.blogsService.update(id, data);
