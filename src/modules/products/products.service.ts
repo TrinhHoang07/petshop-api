@@ -18,6 +18,7 @@ export class ProductsService {
         const product = new Products();
         product.name = data.name;
         product.description = data.description;
+        product.sub_description = data.sub_description;
         product.color = data.color;
         product.rate = data.rate;
         product.quantity = data.quantity;

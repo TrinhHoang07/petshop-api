@@ -26,6 +26,12 @@ export class Products extends BaseEntity {
 
     @Column({
         type: 'varchar',
+        nullable: true,
+    })
+    sub_description: string;
+
+    @Column({
+        type: 'varchar',
     })
     type: string;
 

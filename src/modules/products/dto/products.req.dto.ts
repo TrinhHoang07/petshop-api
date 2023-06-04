@@ -19,4 +19,5 @@ export class ProductsReqDto {
     color: string;
     rate: number;
     description: string;
+    sub_description: string;
 }
