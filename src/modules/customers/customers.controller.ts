@@ -19,14 +19,12 @@ export class CustomersController {
         if (id) {
             const data = await this.customerService.getCustomerById(+id);
 
-            if (data) {
-                return data;
-            } else {
-                return res.status(HttpStatus.BAD_REQUEST).json({
-                    message: 'Not Found',
-                    code: HttpStatus.BAD_REQUEST,
-                });
-            }
+            if (data) return data;
+
+            return res.status(HttpStatus.BAD_REQUEST).json({
+                message: 'Not Found',
+                code: HttpStatus.BAD_REQUEST,
+            });
         }
 
         return res.status(HttpStatus.BAD_REQUEST).json({
@@ -46,9 +44,18 @@ export class CustomersController {
             const isUpdated = await this.customerService.updateCustomerById(+id, data);
 
             if (isUpdated.affected === 1) {
-                return res.status(HttpStatus.OK).json({
-                    message: 'success',
-                    code: HttpStatus.OK,
+                const data = await this.customerService.getCustomerById(+id);
+
+                if (data)
+                    return res.status(HttpStatus.CREATED).json({
+                        message: 'success',
+                        code: HttpStatus.CREATED,
+                        data: data,
+                    });
+
+                return res.status(HttpStatus.BAD_REQUEST).json({
+                    message: 'Not Found',
+                    code: HttpStatus.BAD_REQUEST,
                 });
             }
         }

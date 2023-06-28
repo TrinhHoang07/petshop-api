@@ -18,14 +18,12 @@ export class BlogsController {
 
         if (id) {
             const data = await this.blogsService.getBlogById(+id);
-            if (data) {
-                return data;
-            } else {
-                return res.status(HttpStatus.BAD_REQUEST).json({
-                    message: 'Not Found',
-                    code: HttpStatus.BAD_REQUEST,
-                });
-            }
+            if (data) return data;
+
+            return res.status(HttpStatus.BAD_REQUEST).json({
+                message: 'Not Found',
+                code: HttpStatus.BAD_REQUEST,
+            });
         }
 
         return res.status(HttpStatus.BAD_REQUEST).json({

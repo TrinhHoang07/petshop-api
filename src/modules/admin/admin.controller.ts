@@ -55,15 +55,24 @@ export class AdminController {
     async updateBlogById(
         @Param('id') id: string,
         @Body(new ValidationPipe()) data: BlogsReqDto,
-        @Res() res: Response,
+        @Res({ passthrough: true }) res: Response,
     ): Promise<UpdateResult | Object> {
         if (id) {
             const isUpdated = await this.blogsService.updateBlogById(+id, data);
 
             if (isUpdated.affected === 1) {
-                return res.status(HttpStatus.OK).json({
-                    message: 'success',
-                    code: HttpStatus.OK,
+                const data = await this.blogsService.getBlogById(+id);
+
+                if (data)
+                    return res.status(HttpStatus.CREATED).json({
+                        message: 'success',
+                        code: HttpStatus.CREATED,
+                        data: data,
+                    });
+
+                return res.status(HttpStatus.BAD_REQUEST).json({
+                    message: 'Not Found',
+                    code: HttpStatus.BAD_REQUEST,
                 });
             }
         }
@@ -130,15 +139,24 @@ export class AdminController {
     async updateProductById(
         @Param('id') id: string,
         @Body(new ValidationPipe()) data: ProductsReqDto,
-        @Res() res: Response,
+        @Res({ passthrough: true }) res: Response,
     ): Promise<UpdateResult | Object> {
         if (id) {
             const isUpdated = await this.productsService.updateProductById(+id, data);
 
             if (isUpdated.affected === 1) {
-                return res.status(HttpStatus.OK).json({
-                    message: 'success',
-                    code: HttpStatus.OK,
+                const data = await this.productsService.getProductById(+id);
+
+                if (data)
+                    return res.status(HttpStatus.CREATED).json({
+                        message: 'success',
+                        code: HttpStatus.CREATED,
+                        data: data,
+                    });
+
+                return res.status(HttpStatus.BAD_REQUEST).json({
+                    message: 'Not Found',
+                    code: HttpStatus.BAD_REQUEST,
                 });
             }
         }
