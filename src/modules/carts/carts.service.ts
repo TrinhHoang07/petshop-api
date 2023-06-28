@@ -39,6 +39,6 @@ export class CartsService {
     }
 
     async deleteById(id: number): Promise<DeleteResult> {
-        return await this.cartService.delete(id);
+        return await this.cartService.softDelete(id);
     }
 }

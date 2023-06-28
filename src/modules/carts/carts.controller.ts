@@ -9,12 +9,12 @@ import {
     Res,
     HttpStatus,
     UseGuards,
+    Param,
 } from '@nestjs/common';
 import { CartsService } from './carts.service';
 import { Carts } from './carts.entity';
 import { CartsAddReqDto } from './dto/carts-add.req.dto';
 import { DeleteResult } from 'typeorm';
-import { CartsDeleteReqDto } from './dto/carts-delete.req.dto';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -36,21 +36,23 @@ export class CartsController {
     }
 
     @UseGuards(AuthGuard('jwt'))
-    @Delete('/delete-cart')
+    @Delete('/delete-cart/:id')
     @UsePipes(new ValidationPipe())
-    async deleteToCart(@Body() data: CartsDeleteReqDto, @Res() res: Response): Promise<DeleteResult | Object> {
-        const result = await this.cartsService.deleteById(data.id);
+    async deleteToCart(@Param('id') id: string, @Res() res: Response): Promise<DeleteResult | Object> {
+        if (id) {
+            const result = await this.cartsService.deleteById(+id);
 
-        if (result.affected === 0) {
-            return res.status(HttpStatus.BAD_REQUEST).json({
-                message: 'Error deleting product',
-                code: HttpStatus.BAD_REQUEST,
-            });
+            if (result.affected === 1) {
+                return res.status(HttpStatus.OK).json({
+                    message: 'success',
+                    code: HttpStatus.OK,
+                });
+            }
         }
 
-        return res.status(HttpStatus.OK).json({
-            message: 'Success',
-            code: HttpStatus.OK,
+        return res.status(HttpStatus.BAD_REQUEST).json({
+            message: 'Error delete to cart',
+            code: HttpStatus.BAD_REQUEST,
         });
     }
 }

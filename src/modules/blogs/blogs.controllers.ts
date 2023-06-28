@@ -1,6 +1,7 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Res, HttpStatus } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { Blogs } from './blogs.entity';
+import { Response } from 'express';
 
 @Controller('blogs')
 export class BlogsController {
@@ -12,7 +13,24 @@ export class BlogsController {
     }
 
     @Get('/blog/:id')
-    async getBlogById(@Param('id') id: string): Promise<Blogs> {
-        return await this.blogsService.getBlogById(+id);
+    async getBlogById(@Param('id') id: string, @Res({ passthrough: true }) res: Response): Promise<Blogs | Object> {
+        console.log(typeof id);
+
+        if (id) {
+            const data = await this.blogsService.getBlogById(+id);
+            if (data) {
+                return data;
+            } else {
+                return res.status(HttpStatus.BAD_REQUEST).json({
+                    message: 'Not Found',
+                    code: HttpStatus.BAD_REQUEST,
+                });
+            }
+        }
+
+        return res.status(HttpStatus.BAD_REQUEST).json({
+            message: 'id not found',
+            code: HttpStatus.BAD_REQUEST,
+        });
     }
 }
