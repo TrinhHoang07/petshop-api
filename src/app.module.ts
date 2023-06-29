@@ -10,6 +10,8 @@ import { ProductsModule } from './modules/products/products.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CartsModule } from './modules/carts/carts.module';
 import { BlogsModule } from './modules/blogs/blogs.module';
+import { ChatsModule } from './modules/chats/chats.module';
+import { EventsModule } from './modules/events/events.module';
 
 @Module({
     imports: [
@@ -21,6 +23,8 @@ import { BlogsModule } from './modules/blogs/blogs.module';
         ProductsModule,
         CartsModule,
         BlogsModule,
+        ChatsModule,
+        EventsModule,
     ],
     controllers: [AppController],
     providers: [AppService],
