@@ -131,8 +131,23 @@ export class AdminController {
     // PRODUCTS
 
     @Post('products/create')
-    async addProduct(@Body(new ValidationPipe()) data: ProductsReqDto): Promise<Products> {
-        return await this.productsService.addProduct(data);
+    async addProduct(@Body(new ValidationPipe()) data: ProductsReqDto): Promise<Object> {
+        const product = await this.productsService.addProduct(data);
+
+        return {
+            success: true,
+            statusCode: 200,
+            data: {
+                name: product.name,
+                description: product.description,
+                price: product.price,
+                quantity: product.quantity,
+                sub_description: product.sub_description,
+                type: product.type,
+                color: product.color,
+                preview_url: product.preview_url,
+            },
+        };
     }
 
     @Put('products/update/:id')
@@ -140,8 +155,10 @@ export class AdminController {
         @Param('id') id: string,
         @Body(new ValidationPipe()) data: ProductsReqDto,
         @Res({ passthrough: true }) res: Response,
-    ): Promise<UpdateResult | Object> {
+    ): Promise<any> {
         if (id) {
+            console.log(typeof data);
+
             const isUpdated = await this.productsService.updateProductById(+id, data);
 
             if (isUpdated.affected === 1) {
