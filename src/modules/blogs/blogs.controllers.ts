@@ -13,22 +13,22 @@ export class BlogsController {
     }
 
     @Get('/blog/:id')
-    async getBlogById(@Param('id') id: string, @Res({ passthrough: true }) res: Response): Promise<Blogs | Object> {
+    async getBlogById(@Param('id') id: string): Promise<Blogs | Object> {
         console.log(typeof id);
 
         if (id) {
             const data = await this.blogsService.getBlogById(+id);
             if (data) return data;
 
-            return res.status(HttpStatus.BAD_REQUEST).json({
+            return {
                 message: 'Not Found',
                 code: HttpStatus.BAD_REQUEST,
-            });
+            }
         }
 
-        return res.status(HttpStatus.BAD_REQUEST).json({
+        return {
             message: 'id not found',
             code: HttpStatus.BAD_REQUEST,
-        });
+        }
     }
 }

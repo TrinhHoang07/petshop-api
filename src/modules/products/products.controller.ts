@@ -13,21 +13,37 @@ export class ProductsController {
     }
 
     @Get('/product/:id')
-    async getProduct(@Param('id') id: string, @Res({ passthrough: true }) res: Response): Promise<Products | Object> {
+    async getProduct(@Param('id') id: string): Promise<Products | Object> {
         if (id) {
             const data = await this.productsService.getProductById(+id);
 
-            if (data) return data;
+            if (data) {
+                return {
+                    message: 'success',
+                    statusCode: 200,
+                    data: {
+                        name: data.name,
+                        description: data.description,
+                        sub_description: data.sub_description,
+                        preview_url: data.preview_url,
+                        type: data.type,
+                        price: data.price,
+                        quantity: data.quantity,
+                        rate: data.rate,
+                        color: data.color
+                    }
+                }
+            };
 
-            return res.status(HttpStatus.BAD_REQUEST).json({
+            return {
                 message: 'Not Found',
                 code: HttpStatus.BAD_REQUEST,
-            });
+            }
         }
 
-        return res.status(HttpStatus.BAD_REQUEST).json({
+        return {
             message: 'Not Found Product',
             code: HttpStatus.BAD_REQUEST,
-        });
+        }
     }
 }

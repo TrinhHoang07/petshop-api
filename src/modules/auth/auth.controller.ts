@@ -20,20 +20,19 @@ export class AuthController {
     @Post('/register')
     async register(
         @Body(new ValidationPipe()) customerData: CustomersRegisterReqDto,
-        @Res({ passthrough: true }) res: Response,
     ): Promise<Customers | any> {
         if (customerData.password !== customerData.confirm_password) {
-            return res.status(HttpStatus.BAD_REQUEST).json({
+            return {
                 message: 'Password is not matches',
                 status_code: HttpStatus.BAD_REQUEST,
-            });
+            }
         }
 
         if ((await this.customerService.checkCustomer(customerData.name, customerData.email)) === false) {
-            return res.status(HttpStatus.BAD_REQUEST).json({
+            return {
                 message: 'Name or Email already exist',
                 status_code: HttpStatus.BAD_REQUEST,
-            });
+            }
         }
 
         const customer = await this.customerService.register(customerData);

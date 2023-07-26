@@ -55,7 +55,6 @@ export class AdminController {
     async updateBlogById(
         @Param('id') id: string,
         @Body(new ValidationPipe()) data: BlogsReqDto,
-        @Res({ passthrough: true }) res: Response,
     ): Promise<UpdateResult | Object> {
         if (id) {
             const isUpdated = await this.blogsService.updateBlogById(+id, data);
@@ -64,42 +63,42 @@ export class AdminController {
                 const data = await this.blogsService.getBlogById(+id);
 
                 if (data)
-                    return res.status(HttpStatus.CREATED).json({
+                    return {
                         message: 'success',
                         code: HttpStatus.CREATED,
                         data: data,
-                    });
+                    }
 
-                return res.status(HttpStatus.BAD_REQUEST).json({
+                return {
                     message: 'Not Found',
                     code: HttpStatus.BAD_REQUEST,
-                });
+                }
             }
         }
 
-        return res.status(HttpStatus.BAD_REQUEST).json({
+        return {
             message: 'Error updating blogs',
             code: HttpStatus.BAD_REQUEST,
-        });
+        }
     }
 
     @Delete('/blogs/delete/:id')
-    async deleteBlogById(@Param('id') id: string, @Res() res: Response): Promise<UpdateResult | Object> {
+    async deleteBlogById(@Param('id') id: string): Promise<UpdateResult | Object> {
         if (id) {
             const isDeleted = await this.blogsService.deleteBlogById(+id);
 
             if (isDeleted.affected === 1) {
-                return res.status(HttpStatus.OK).json({
+                return {
                     message: 'success',
                     code: HttpStatus.OK,
-                });
+                }
             }
         }
 
-        return res.status(HttpStatus.BAD_REQUEST).json({
+        return {
             message: 'Error deleting blogs',
             code: HttpStatus.BAD_REQUEST,
-        });
+        }
     }
 
     // CUSTOMERS
@@ -110,22 +109,22 @@ export class AdminController {
     }
 
     @Delete('/customers/delete/:id')
-    async deleteCustomerById(@Param('id') id: string, @Res() res: Response): Promise<UpdateResult | Object> {
+    async deleteCustomerById(@Param('id') id: string): Promise<UpdateResult | Object> {
         if (id) {
             const isDeleted = await this.customerService.deleteCustomerById(+id);
 
             if (isDeleted.affected === 1) {
-                return res.status(HttpStatus.OK).json({
+                return {
                     message: 'success',
                     code: HttpStatus.OK,
-                });
+                }
             }
         }
 
-        return res.status(HttpStatus.BAD_REQUEST).json({
+        return {
             message: 'Error deleting customer',
             code: HttpStatus.BAD_REQUEST,
-        });
+        }
     }
 
     // PRODUCTS
@@ -154,10 +153,8 @@ export class AdminController {
     async updateProductById(
         @Param('id') id: string,
         @Body(new ValidationPipe()) data: ProductsReqDto,
-        @Res({ passthrough: true }) res: Response,
-    ): Promise<any> {
+    ): Promise<UpdateResult | Object> {
         if (id) {
-            console.log(typeof data);
 
             const isUpdated = await this.productsService.updateProductById(+id, data);
 
@@ -165,40 +162,40 @@ export class AdminController {
                 const data = await this.productsService.getProductById(+id);
 
                 if (data)
-                    return res.status(HttpStatus.CREATED).json({
+                    return {
                         message: 'success',
                         code: HttpStatus.CREATED,
                         data: data,
-                    });
+                    }
 
-                return res.status(HttpStatus.BAD_REQUEST).json({
+                return {
                     message: 'Not Found',
                     code: HttpStatus.BAD_REQUEST,
-                });
+                }
             }
         }
-        return res.status(HttpStatus.BAD_REQUEST).json({
+        return {
             message: 'Error update product',
             code: HttpStatus.BAD_REQUEST,
-        });
+        }
     }
 
     @Delete('products/delete/:id')
-    async deleteProductById(@Param('id') id: string, @Res() res: Response): Promise<UpdateResult | Object> {
+    async deleteProductById(@Param('id') id: string): Promise<UpdateResult | Object> {
         if (id) {
             const isDeleted = await this.productsService.deleteProductById(+id);
 
             if (isDeleted.affected === 1) {
-                return res.status(HttpStatus.OK).json({
+                return {
                     message: 'success',
                     code: HttpStatus.OK,
-                });
+                }
             }
         }
 
-        return res.status(HttpStatus.BAD_REQUEST).json({
+        return {
             message: 'Error delete product',
             code: HttpStatus.BAD_REQUEST,
-        });
+        }
     }
 }

@@ -14,14 +14,14 @@ export class ChatsController {
     }
 
     @Get('/chat/:id')
-    async getChatById(@Param('id') id: string, @Res() res: Response): Promise<Chats[] | Object> {
+    async getChatById(@Param('id') id: string): Promise<Chats[] | Object> {
         if (id) {
             return await this.chatsService.getChatsByUserId(+id);
         }
 
-        return res.status(HttpStatus.BAD_REQUEST).json({
+        return {
             message: 'error',
             code: HttpStatus.BAD_REQUEST,
-        });
+        }
     }
 }

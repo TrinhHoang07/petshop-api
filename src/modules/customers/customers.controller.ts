@@ -14,23 +14,23 @@ export class CustomersController {
     @Get('/customer/:id')
     async getCustomerById(
         @Param('id') id: string,
-        @Res({ passthrough: true }) res: Response,
     ): Promise<Customers | Object> {
         if (id) {
             const data = await this.customerService.getCustomerById(+id);
 
             if (data) return data;
 
-            return res.status(HttpStatus.BAD_REQUEST).json({
+            return {
                 message: 'Not Found',
                 code: HttpStatus.BAD_REQUEST,
-            });
+            }
         }
 
-        return res.status(HttpStatus.BAD_REQUEST).json({
+        return {
             message: 'Not Found Customer',
             code: HttpStatus.BAD_REQUEST,
-        });
+        }
+
     }
 
     @UseGuards(AuthGuard('jwt'))
@@ -38,7 +38,6 @@ export class CustomersController {
     async updateCustomerById(
         @Param('id') id: string,
         @Body(new ValidationPipe()) data: CustomersReqDto,
-        @Res() res: Response,
     ): Promise<UpdateResult | Object> {
         if (id) {
             const isUpdated = await this.customerService.updateCustomerById(+id, data);
@@ -47,22 +46,22 @@ export class CustomersController {
                 const data = await this.customerService.getCustomerById(+id);
 
                 if (data)
-                    return res.status(HttpStatus.CREATED).json({
+                    return {
                         message: 'success',
                         code: HttpStatus.CREATED,
                         data: data,
-                    });
+                    }
 
-                return res.status(HttpStatus.BAD_REQUEST).json({
+                return {
                     message: 'Not Found',
                     code: HttpStatus.BAD_REQUEST,
-                });
+                }
             }
         }
 
-        return res.status(HttpStatus.BAD_REQUEST).json({
+        return {
             message: 'Not Found Customer',
             code: HttpStatus.BAD_REQUEST,
-        });
+        }
     }
 }

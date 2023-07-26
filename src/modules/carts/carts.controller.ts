@@ -38,21 +38,21 @@ export class CartsController {
     @UseGuards(AuthGuard('jwt'))
     @Delete('/delete-cart/:id')
     @UsePipes(new ValidationPipe())
-    async deleteToCart(@Param('id') id: string, @Res() res: Response): Promise<DeleteResult | Object> {
+    async deleteToCart(@Param('id') id: string): Promise<DeleteResult | Object> {
         if (id) {
             const result = await this.cartsService.deleteById(+id);
 
             if (result.affected === 1) {
-                return res.status(HttpStatus.OK).json({
+                return {
                     message: 'success',
                     code: HttpStatus.OK,
-                });
+                }
             }
         }
 
-        return res.status(HttpStatus.BAD_REQUEST).json({
+        return {
             message: 'Error delete to cart',
             code: HttpStatus.BAD_REQUEST,
-        });
+        }
     }
 }
