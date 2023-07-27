@@ -23,6 +23,7 @@ import { Customers } from '../customers/customers.entity';
 import { ProductsService } from '../products/products.service';
 import { ProductsReqDto } from '../products/dto/products.req.dto';
 import { Products } from '../products/products.entity';
+import { CustomerCreateDto } from '../customers/dto/customer-create.req.dto';
 
 @Controller('admin')
 export class AdminController {
@@ -67,19 +68,19 @@ export class AdminController {
                         message: 'success',
                         code: HttpStatus.CREATED,
                         data: data,
-                    }
+                    };
 
                 return {
                     message: 'Not Found',
                     code: HttpStatus.BAD_REQUEST,
-                }
+                };
             }
         }
 
         return {
             message: 'Error updating blogs',
             code: HttpStatus.BAD_REQUEST,
-        }
+        };
     }
 
     @Delete('/blogs/delete/:id')
@@ -91,21 +92,31 @@ export class AdminController {
                 return {
                     message: 'success',
                     code: HttpStatus.OK,
-                }
+                };
             }
         }
 
         return {
             message: 'Error deleting blogs',
             code: HttpStatus.BAD_REQUEST,
-        }
+        };
     }
 
     // CUSTOMERS
+    @Post('/customers/create')
+    async createCustomer(@Body(new ValidationPipe()) data: CustomerCreateDto): Promise<Customers> {
+        return await this.customerService.createCustomer(data);
+    }
 
     @Get('/customers/all')
-    async getAll(): Promise<Customers[]> {
-        return await this.customerService.getAll();
+    async getAll(): Promise<Customers[] | Object> {
+        const allCustomers = await this.customerService.getAll();
+
+        return {
+            message: 'success',
+            code: HttpStatus.OK,
+            data: allCustomers,
+        };
     }
 
     @Delete('/customers/delete/:id')
@@ -117,14 +128,14 @@ export class AdminController {
                 return {
                     message: 'success',
                     code: HttpStatus.OK,
-                }
+                };
             }
         }
 
         return {
             message: 'Error deleting customer',
             code: HttpStatus.BAD_REQUEST,
-        }
+        };
     }
 
     // PRODUCTS
@@ -155,7 +166,6 @@ export class AdminController {
         @Body(new ValidationPipe()) data: ProductsReqDto,
     ): Promise<UpdateResult | Object> {
         if (id) {
-
             const isUpdated = await this.productsService.updateProductById(+id, data);
 
             if (isUpdated.affected === 1) {
@@ -166,18 +176,18 @@ export class AdminController {
                         message: 'success',
                         code: HttpStatus.CREATED,
                         data: data,
-                    }
+                    };
 
                 return {
                     message: 'Not Found',
                     code: HttpStatus.BAD_REQUEST,
-                }
+                };
             }
         }
         return {
             message: 'Error update product',
             code: HttpStatus.BAD_REQUEST,
-        }
+        };
     }
 
     @Delete('products/delete/:id')
@@ -189,13 +199,13 @@ export class AdminController {
                 return {
                     message: 'success',
                     code: HttpStatus.OK,
-                }
+                };
             }
         }
 
         return {
             message: 'Error delete product',
             code: HttpStatus.BAD_REQUEST,
-        }
+        };
     }
 }

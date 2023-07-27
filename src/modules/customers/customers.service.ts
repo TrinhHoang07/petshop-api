@@ -4,6 +4,8 @@ import { Customers } from './customers.entity';
 import { Repository, UpdateResult } from 'typeorm';
 import { CustomersRegisterReqDto } from './dto/customers-register.req.dto';
 import { CustomersReqDto } from './dto/customers.req.dto';
+import { async } from 'rxjs';
+import { CustomerCreateDto } from './dto/customer-create.req.dto';
 
 @Injectable()
 export class CustomersService {
@@ -17,6 +19,20 @@ export class CustomersService {
         customer.password = customerData.password;
 
         return customer.save();
+    }
+
+    async createCustomer(data: CustomerCreateDto): Promise<Customers> {
+        const customer = new Customers();
+        customer.name = data.name;
+        customer.password = data.password;
+        customer.email = data.email;
+        customer.gender = data.gender;
+        customer.birth_date = data.birth_date;
+        customer.avatar_path = data.avatar_path;
+        customer.address = data.address;
+        customer.phone_number = data.phone_number;
+
+        return await this.customerEntity.save(customer);
     }
 
     // get all customers
