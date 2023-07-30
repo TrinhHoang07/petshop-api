@@ -104,8 +104,14 @@ export class AdminController {
 
     // CUSTOMERS
     @Post('/customers/create')
-    async createCustomer(@Body(new ValidationPipe()) data: CustomerCreateDto): Promise<Customers> {
-        return await this.customerService.createCustomer(data);
+    async createCustomer(@Body(new ValidationPipe()) data: CustomerCreateDto): Promise<Customers | Object> {
+        const customer = await this.customerService.createCustomer(data);
+
+        return {
+            message: 'success',
+            code: HttpStatus.CREATED,
+            data: customer,
+        };
     }
 
     @Get('/customers/all')
@@ -148,6 +154,7 @@ export class AdminController {
             success: true,
             statusCode: 200,
             data: {
+                id: product.id,
                 name: product.name,
                 description: product.description,
                 price: product.price,
