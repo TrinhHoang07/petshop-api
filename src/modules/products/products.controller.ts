@@ -30,20 +30,20 @@ export class ProductsController {
                         price: data.price,
                         quantity: data.quantity,
                         rate: data.rate,
-                        color: data.color
-                    }
-                }
-            };
+                        color: data.color,
+                    },
+                };
+            }
 
             return {
                 message: 'Not Found',
                 code: HttpStatus.BAD_REQUEST,
-            }
+            };
         }
 
         return {
             message: 'Not Found Product',
             code: HttpStatus.BAD_REQUEST,
-        }
+        };
     }
 }
