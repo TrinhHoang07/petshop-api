@@ -35,6 +35,15 @@ export class ProductsService {
         });
     }
 
+    async getProductLimit(limit: number, type: string): Promise<Products[]> {
+        return await this.productsService.find({
+            where: {
+                type: type,
+            },
+            take: limit,
+        });
+    }
+
     // update product by id
     async updateProductById(id: number, data: ProductsReqDto): Promise<UpdateResult> {
         return await this.productsService.update(id, data);
