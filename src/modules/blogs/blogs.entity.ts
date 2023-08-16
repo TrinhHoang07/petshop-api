@@ -26,7 +26,7 @@ export class Blogs extends BaseEntity {
     preview_url: string;
 
     @Column({
-        type: 'varchar',
+        type: 'text',
     })
     description: string;
 

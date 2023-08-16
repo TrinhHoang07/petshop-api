@@ -8,10 +8,12 @@ import { BlogsReqDto } from './dto/blogs.req.dto';
 export class BlogsService {
     constructor(@InjectRepository(Blogs) private blogsService: Repository<Blogs>) {}
 
+    // get all blogs
     async getAll(): Promise<Blogs[]> {
         return await this.blogsService.find();
     }
 
+    // create new blog
     async createBlog(data: BlogsReqDto) {
         const blog = new Blogs();
         blog.title = data.title;
@@ -21,10 +23,34 @@ export class BlogsService {
         return blog.save();
     }
 
+    // get blogs by ID
     async getBlogById(id: number): Promise<Blogs> {
         return await this.blogsService.findOneBy({
             id: id,
         });
+    }
+
+    // get random blogs
+    async randomBlogs(limit?: number): Promise<Blogs[] | Object> {
+        const data = await this.blogsService
+            .createQueryBuilder('blogs')
+            .select()
+            .orderBy('RAND()')
+            .take(limit ?? 6)
+            .getMany();
+
+        if (data) {
+            return {
+                message: 'success',
+                statusCode: 200,
+                data: data,
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: 404,
+            };
+        }
     }
 
     // update customer by id
