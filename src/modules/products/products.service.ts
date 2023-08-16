@@ -13,6 +13,50 @@ export class ProductsService {
         return await this.productsService.find();
     }
 
+    // search products
+    async searchProducts(query: string): Promise<Products[] | Object> {
+        const data = await this.productsService
+            .createQueryBuilder('products')
+            .where('products.name like :name', { name: '%' + query + '%' })
+            .getMany();
+
+        if (data) {
+            return {
+                message: 'success',
+                statusCode: 200,
+                data: data,
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: 404,
+            };
+        }
+    }
+
+    // get random products
+    async randomProducts(limit?: number): Promise<Products[] | Object> {
+        const data = await this.productsService
+            .createQueryBuilder('products')
+            .select()
+            .orderBy('RAND()')
+            .take(limit ?? 6)
+            .getMany();
+
+        if (data) {
+            return {
+                message: 'success',
+                statusCode: 200,
+                data: data,
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: 404,
+            };
+        }
+    }
+
     // create a new product
     async addProduct(data: ProductsReqDto) {
         const product = new Products();
@@ -29,12 +73,14 @@ export class ProductsService {
         return await product.save();
     }
 
+    // get product by id
     async getProductById(id: number): Promise<Products> {
         return await this.productsService.findOneBy({
             id: id,
         });
     }
 
+    // get products by type and limit
     async getProductLimit(limit: number, type: string): Promise<Products[]> {
         return await this.productsService.find({
             where: {

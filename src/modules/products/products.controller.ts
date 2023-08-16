@@ -1,17 +1,32 @@
-import { Controller, Get, Param, Res, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, Param, HttpStatus, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { Products } from './products.entity';
-import { Response } from 'express';
 
 @Controller('products')
 export class ProductsController {
     constructor(private productsService: ProductsService) {}
 
+    // get all products
     @Get('/all')
     async getAll(): Promise<Products[]> {
         return await this.productsService.getAll();
     }
 
+    // search products
+    @Get('/search')
+    async searchProducts(@Query() query: { search: string }) {
+        console.log('query OKOKOK', query.search);
+
+        return await this.productsService.searchProducts(query.search);
+    }
+
+    // random products
+    @Get('/random')
+    async randomProducts(@Query() query: { limit: number }) {
+        return await this.productsService.randomProducts(query.limit);
+    }
+
+    // get products from homepage
     @Get('/products/home')
     async getProductsInHome(@Query() query: { limit: number; type: string }): Promise<Products[] | Object> {
         const data = await this.productsService.getProductLimit(query.limit, query.type);
@@ -30,6 +45,7 @@ export class ProductsController {
         };
     }
 
+    // get product by ID
     @Get('/product/:id')
     async getProduct(@Param('id') id: string): Promise<Products | Object> {
         if (id) {
