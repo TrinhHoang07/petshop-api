@@ -19,13 +19,13 @@ export class Products extends BaseEntity {
     name: string;
 
     @Column({
-        type: 'varchar',
+        type: 'text',
         nullable: true,
     })
     description: string;
 
     @Column({
-        type: 'varchar',
+        type: 'text',
         nullable: true,
     })
     sub_description: string;
