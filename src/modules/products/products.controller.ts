@@ -56,6 +56,7 @@ export class ProductsController {
                     message: 'success',
                     statusCode: 200,
                     data: {
+                        id: data.id,
                         name: data.name,
                         description: data.description,
                         sub_description: data.sub_description,

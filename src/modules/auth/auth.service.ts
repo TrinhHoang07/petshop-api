@@ -17,16 +17,21 @@ export class AuthService {
 
     async genarateToken(customer: Customers) {
         return {
-            name: customer.name,
-            email: customer.email,
-            phone_number: customer.phone_number,
-            gender: customer.gender,
-            address: customer.address,
-            access_token: this.jwtService.sign({
+            message: 'success',
+            statusCode: 200,
+            data: {
+                id: customer.id,
                 name: customer.name,
                 email: customer.email,
-                sub: 'h07',
-            }),
+                phone_number: customer.phone_number,
+                gender: customer.gender,
+                address: customer.address,
+                access_token: this.jwtService.sign({
+                    name: customer.name,
+                    email: customer.email,
+                    sub: 'h07',
+                }),
+            },
         };
     }
 }

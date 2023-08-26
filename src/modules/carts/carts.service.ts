@@ -29,13 +29,65 @@ export class CartsService {
             .getRawMany();
     }
 
-    async createCart(data: CartsAddReqDto): Promise<Carts> {
-        const cart = new Carts();
-        cart.customer_id = data.customer_id;
-        cart.product_id = data.product_id;
-        cart.quantity = data.quantity;
+    async getProductsCartsById(id: number) {
+        return await this.cartService
+            .createQueryBuilder('carts')
+            .addSelect('product.name', 'product_name')
+            .addSelect('product.description', 'product_description')
+            .addSelect('product.price', 'product_price')
+            .addSelect('product.preview_url', 'product_preview_url')
+            .addSelect('product.type', 'product_type')
+            .addSelect('product.rate', 'product_rate')
+            .addSelect('product.color', 'product_color')
+            .addSelect('customer.name', 'customer_name')
+            .addSelect('customer.address', 'customer_address')
+            .addSelect('customer.phone_number', 'customer_phone_number')
+            .addSelect('customer.birth_date', 'customer_birth_date')
+            .addSelect('customer.avatar_path', 'customer_avatar_path')
+            .addSelect('customer.gender', 'customer_gender')
+            .innerJoin('products', 'product', 'product.id=carts.product_id')
+            .innerJoin('customers', 'customer', 'customer.id=carts.customer_id')
+            .where(`carts.customer_id=${id}`)
+            .getRawMany();
+    }
 
-        return cart.save();
+    async createCart(data: CartsAddReqDto): Promise<Carts | any> {
+        const isValid: { isHas: boolean } = await this.getProductInCartByProductId(data.product_id);
+
+        if (isValid.isHas) {
+            const cart = new Carts();
+            cart.customer_id = data.customer_id;
+            cart.product_id = data.product_id;
+            cart.quantity = data.quantity;
+
+            cart.save();
+
+            return {
+                message: 'success',
+                statusCode: 200,
+                data: cart,
+            };
+        } else {
+            return {
+                message: 'Product already exists',
+            };
+        }
+    }
+
+    async getProductInCartByProductId(productId: number): Promise<any> {
+        const product = await this.cartService.findOneBy({
+            product_id: productId,
+        });
+
+        if (product) {
+            return {
+                isHas: false,
+            };
+        } else {
+            return {
+                isHas: true,
+            };
+        }
     }
 
     async deleteById(id: number): Promise<DeleteResult> {
