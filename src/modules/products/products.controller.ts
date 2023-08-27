@@ -20,10 +20,10 @@ export class ProductsController {
 
     // search products
     @Get('/search')
-    async searchProducts(@Query() query: { search: string }) {
-        console.log('query OKOKOK', query.search);
+    async searchProducts(@Query() query: { query: string }) {
+        console.log('query OKOKOK', query);
 
-        return await this.productsService.searchProducts(query.search);
+        return await this.productsService.searchProducts(JSON.parse(atob(query.query as string)));
     }
 
     // random products
