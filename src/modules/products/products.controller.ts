@@ -8,8 +8,14 @@ export class ProductsController {
 
     // get all products
     @Get('/all')
-    async getAll(): Promise<Products[]> {
-        return await this.productsService.getAll();
+    async getAll(): Promise<Products[] | Object> {
+        const data = await this.productsService.getAll();
+
+        return {
+            message: 'success',
+            statusCode: 200,
+            data: data,
+        };
     }
 
     // search products

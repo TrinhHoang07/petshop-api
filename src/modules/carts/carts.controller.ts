@@ -53,11 +53,7 @@ export class CartsController {
         const newCart = await this.cartsService.createCart(data);
 
         if (newCart.message === 'success') {
-            return {
-                message: 'success',
-                statusCode: 200,
-                data: newCart,
-            };
+            return newCart;
         } else {
             return {
                 message: newCart.message,
