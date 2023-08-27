@@ -22,8 +22,10 @@ export class AuthService {
             data: {
                 id: customer.id,
                 name: customer.name,
+                avatar: customer.avatar_path,
                 email: customer.email,
                 phone_number: customer.phone_number,
+                birth_day: customer.birth_date,
                 gender: customer.gender,
                 address: customer.address,
                 access_token: this.jwtService.sign({
