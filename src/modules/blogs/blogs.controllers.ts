@@ -1,7 +1,6 @@
-import { Controller, Get, Param, Res, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, Param, HttpStatus, Query } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { Blogs } from './blogs.entity';
-import { Response } from 'express';
 
 @Controller('blogs')
 export class BlogsController {
@@ -9,13 +8,39 @@ export class BlogsController {
 
     // get all blogs
     @Get('/all')
-    async getAll(): Promise<Blogs[]> {
-        return await this.blogsService.getAll();
+    async getAll(): Promise<Blogs[] | Object> {
+        const data = await this.blogsService.getAll();
+
+        if (data) {
+            return {
+                message: 'success',
+                statusCode: 200,
+                data: data,
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: 404,
+            };
+        }
     }
 
     @Get('/random')
     async getRandomBlogs(@Query() query: { limit: number }) {
-        return await this.blogsService.randomBlogs(query.limit);
+        const data = await this.blogsService.randomBlogs(query.limit);
+
+        if (data) {
+            return {
+                message: 'success',
+                statusCode: 200,
+                data: data,
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: 404,
+            };
+        }
     }
 
     // get blog by ID

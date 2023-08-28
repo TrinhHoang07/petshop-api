@@ -23,13 +23,39 @@ export class ProductsController {
     async searchProducts(@Query() query: { query: string }) {
         console.log('query OKOKOK', query);
 
-        return await this.productsService.searchProducts(JSON.parse(atob(query.query as string)));
+        const data = await this.productsService.searchProducts(JSON.parse(atob(query.query as string)));
+
+        if (data) {
+            return {
+                message: 'success',
+                statusCode: 200,
+                data: data,
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: 404,
+            };
+        }
     }
 
     // random products
     @Get('/random')
     async randomProducts(@Query() query: { limit: number }) {
-        return await this.productsService.randomProducts(query.limit);
+        const data = await this.productsService.randomProducts(query.limit);
+
+        if (data) {
+            return {
+                message: 'success',
+                statusCode: 200,
+                data: data,
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: 404,
+            };
+        }
     }
 
     // get products from homepage

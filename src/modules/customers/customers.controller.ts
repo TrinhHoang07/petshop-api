@@ -1,10 +1,23 @@
-import { Body, Controller, HttpStatus, Res, ValidationPipe, Put, Param, Get, UseGuards } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    HttpStatus,
+    ValidationPipe,
+    Put,
+    Param,
+    Get,
+    UseGuards,
+    Post,
+    UseInterceptors,
+    UploadedFile,
+} from '@nestjs/common';
 import { CustomersService } from './customers.service';
-import { Response } from 'express';
 import { CustomersReqDto } from './dto/customers.req.dto';
 import { UpdateResult } from 'typeorm';
 import { Customers } from './customers.entity';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @Controller('customers')
 export class CustomersController {
@@ -12,9 +25,7 @@ export class CustomersController {
 
     @UseGuards(AuthGuard('jwt'))
     @Get('/customer/:id')
-    async getCustomerById(
-        @Param('id') id: string,
-    ): Promise<Customers | Object> {
+    async getCustomerById(@Param('id') id: string): Promise<Customers | Object> {
         if (id) {
             const data = await this.customerService.getCustomerById(+id);
 
@@ -23,14 +34,13 @@ export class CustomersController {
             return {
                 message: 'Not Found',
                 code: HttpStatus.BAD_REQUEST,
-            }
+            };
         }
 
         return {
             message: 'Not Found Customer',
             code: HttpStatus.BAD_REQUEST,
-        }
-
+        };
     }
 
     @UseGuards(AuthGuard('jwt'))
@@ -50,18 +60,41 @@ export class CustomersController {
                         message: 'success',
                         code: HttpStatus.CREATED,
                         data: data,
-                    }
+                    };
 
                 return {
                     message: 'Not Found',
                     code: HttpStatus.BAD_REQUEST,
-                }
+                };
             }
         }
 
         return {
             message: 'Not Found Customer',
             code: HttpStatus.BAD_REQUEST,
-        }
+        };
+    }
+
+    ////////////////////////////// test upload => OK
+    @Post('/test/upload')
+    @UseInterceptors(
+        FileInterceptor('file', {
+            storage: diskStorage({
+                destination: './uploads',
+                filename(_, file, callback) {
+                    const fileName = `${file.originalname}`;
+
+                    callback(null, fileName);
+                },
+            }),
+        }),
+    )
+    testUp(
+        @UploadedFile()
+        file: Express.Multer.File,
+    ) {
+        console.log('file uploaded: ', file);
+
+        return 'OK';
     }
 }

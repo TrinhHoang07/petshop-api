@@ -14,28 +14,17 @@ export class ProductsService {
     }
 
     // search products
-    async searchProducts(query: string): Promise<Products[] | Object> {
+    async searchProducts(query: { search: string }): Promise<Products[]> {
         const data = await this.productsService
             .createQueryBuilder('products')
-            .where('products.name like :name', { name: '%' + query + '%' })
+            .where('products.name like :name', { name: '%' + query.search + '%' })
             .getMany();
 
-        if (data) {
-            return {
-                message: 'success',
-                statusCode: 200,
-                data: data,
-            };
-        } else {
-            return {
-                message: 'error',
-                statusCode: 404,
-            };
-        }
+        return data;
     }
 
     // get random products
-    async randomProducts(limit?: number): Promise<Products[] | Object> {
+    async randomProducts(limit?: number): Promise<Products[]> {
         const data = await this.productsService
             .createQueryBuilder('products')
             .select()
@@ -43,18 +32,7 @@ export class ProductsService {
             .take(limit ?? 6)
             .getMany();
 
-        if (data) {
-            return {
-                message: 'success',
-                statusCode: 200,
-                data: data,
-            };
-        } else {
-            return {
-                message: 'error',
-                statusCode: 404,
-            };
-        }
+        return data;
     }
 
     // create a new product

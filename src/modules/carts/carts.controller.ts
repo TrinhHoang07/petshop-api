@@ -52,11 +52,15 @@ export class CartsController {
     async addToCart(@Body() data: CartsAddReqDto): Promise<Carts | Object> {
         const newCart = await this.cartsService.createCart(data);
 
-        if (newCart.message === 'success') {
-            return newCart;
+        if (newCart) {
+            return {
+                message: 'success',
+                statusCode: 200,
+                data: newCart,
+            };
         } else {
             return {
-                message: newCart.message,
+                message: 'Error',
                 statusCode: HttpStatus.BAD_REQUEST,
             };
         }

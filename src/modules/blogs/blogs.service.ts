@@ -39,18 +39,7 @@ export class BlogsService {
             .take(limit ?? 6)
             .getMany();
 
-        if (data) {
-            return {
-                message: 'success',
-                statusCode: 200,
-                data: data,
-            };
-        } else {
-            return {
-                message: 'error',
-                statusCode: 404,
-            };
-        }
+        return data;
     }
 
     // update customer by id

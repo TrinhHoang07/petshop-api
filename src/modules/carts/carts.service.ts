@@ -51,7 +51,7 @@ export class CartsService {
             .getRawMany();
     }
 
-    async createCart(data: CartsAddReqDto): Promise<Carts | any> {
+    async createCart(data: CartsAddReqDto): Promise<Carts> {
         const isValid: { isHas: boolean } = await this.getProductInCartByProductId(data.product_id);
 
         if (isValid.isHas) {
@@ -60,17 +60,9 @@ export class CartsService {
             cart.product_id = data.product_id;
             cart.quantity = data.quantity;
 
-            cart.save();
-
-            return {
-                message: 'success',
-                statusCode: 200,
-                data: cart,
-            };
+            return await this.cartService.save(cart);
         } else {
-            return {
-                message: 'Product already exists',
-            };
+            return null;
         }
     }
 
