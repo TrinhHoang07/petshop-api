@@ -10,6 +10,8 @@ import {
     Post,
     UseInterceptors,
     UploadedFile,
+    Response,
+    StreamableFile,
 } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { CustomersReqDto } from './dto/customers.req.dto';
@@ -18,6 +20,8 @@ import { Customers } from './customers.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { join } from 'path';
+import { createReadStream } from 'fs';
 
 @Controller('customers')
 export class CustomersController {
@@ -96,5 +100,19 @@ export class CustomersController {
         console.log('file uploaded: ', file);
 
         return 'OK';
+    }
+
+    //////////////////////////// test get avatar ==> OK
+    @Get('/test/file')
+    getFile(@Response({ passthrough: true }) res): StreamableFile {
+        res.set({
+            'Content-Type': 'image/webp,image/apng',
+        });
+
+        console.log('J', join(process.cwd(), 'uploads', 'girlcute.jpg'));
+
+        const file = createReadStream(join(process.cwd(), 'uploads', 'girlcute.jpg'));
+
+        return new StreamableFile(file);
     }
 }
