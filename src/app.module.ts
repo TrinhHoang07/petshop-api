@@ -12,6 +12,7 @@ import { CartsModule } from './modules/carts/carts.module';
 import { BlogsModule } from './modules/blogs/blogs.module';
 import { ChatsModule } from './modules/chats/chats.module';
 import { EventsModule } from './modules/events/events.module';
+import { OrdersModule } from './modules/orders/orders.module';
 
 @Module({
     imports: [
@@ -25,6 +26,7 @@ import { EventsModule } from './modules/events/events.module';
         BlogsModule,
         ChatsModule,
         EventsModule,
+        OrdersModule,
     ],
     controllers: [AppController],
     providers: [AppService],
