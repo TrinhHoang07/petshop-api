@@ -4,20 +4,25 @@ import {
     CreateDateColumn,
     DeleteDateColumn,
     Entity,
+    ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
+import { Customers } from '../customers/customers.entity';
+import { Products } from '../products/products.entity';
 
 @Entity('carts')
 export class Carts extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    customer_id: number;
+    // @Column()
+    @ManyToOne(() => Customers, (cus) => cus.id)
+    customer_: number;
 
-    @Column()
-    product_id: number;
+    // @Column()
+    @ManyToOne(() => Products, (pro) => pro.id)
+    product_: number;
 
     @Column({
         type: 'int',

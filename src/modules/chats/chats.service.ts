@@ -10,13 +10,13 @@ export class ChatsService {
 
     async getChatsByUserId(userId: number): Promise<Chats[]> {
         return await this.chatsService.findBy({
-            customer_id: userId,
+            customer_: userId,
         });
     }
 
     async createChats(data: ChatsAddDto): Promise<Chats> {
         const chat = new Chats();
-        chat.customer_id = data.customer_id;
+        chat.customer_ = data.customer_id;
         chat.message_emit = data.message_emit;
         chat.message_on = data.message_on;
 

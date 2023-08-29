@@ -4,9 +4,11 @@ import {
     CreateDateColumn,
     DeleteDateColumn,
     Entity,
+    ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
+import { Customers } from '../customers/customers.entity';
 
 @Entity('chats')
 export class Chats extends BaseEntity {
@@ -14,7 +16,8 @@ export class Chats extends BaseEntity {
     id: number;
 
     @Column()
-    customer_id: number;
+    @ManyToOne(() => Customers, (cus) => cus.id)
+    customer_: number;
 
     @Column({
         type: 'varchar',

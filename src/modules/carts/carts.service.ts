@@ -24,8 +24,8 @@ export class CartsService {
             .addSelect('customer.birth_date', 'customer_birth_date')
             .addSelect('customer.avatar_path', 'customer_avatar_path')
             .addSelect('customer.gender', 'customer_gender')
-            .innerJoin('products', 'product', 'product.id=carts.product_id')
-            .innerJoin('customers', 'customer', 'customer.id=carts.customer_id')
+            .innerJoin('products', 'product', 'product.id=carts.product_')
+            .innerJoin('customers', 'customer', 'customer.id=carts.customer_')
             .getRawMany();
     }
 
@@ -45,8 +45,8 @@ export class CartsService {
             .addSelect('customer.birth_date', 'customer_birth_date')
             .addSelect('customer.avatar_path', 'customer_avatar_path')
             .addSelect('customer.gender', 'customer_gender')
-            .innerJoin('products', 'product', 'product.id=carts.product_id')
-            .innerJoin('customers', 'customer', 'customer.id=carts.customer_id')
+            .innerJoin('products', 'product', 'product.id=carts.product_')
+            .innerJoin('customers', 'customer', 'customer.id=carts.customer_')
             .where(`carts.customer_id=${id}`)
             .getRawMany();
     }
@@ -56,8 +56,8 @@ export class CartsService {
 
         if (isValid.isHas) {
             const cart = new Carts();
-            cart.customer_id = data.customer_id;
-            cart.product_id = data.product_id;
+            cart.customer_ = data.customer_id;
+            cart.product_ = data.product_id;
             cart.quantity = data.quantity;
 
             return await this.cartService.save(cart);
@@ -68,7 +68,7 @@ export class CartsService {
 
     async getProductInCartByProductId(productId: number): Promise<any> {
         const product = await this.cartService.findOneBy({
-            product_id: productId,
+            product_: productId,
         });
 
         if (product) {

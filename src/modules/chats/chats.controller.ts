@@ -22,6 +22,6 @@ export class ChatsController {
         return {
             message: 'error',
             code: HttpStatus.BAD_REQUEST,
-        }
+        };
     }
 }
