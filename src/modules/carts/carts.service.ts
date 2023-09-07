@@ -52,7 +52,7 @@ export class CartsService {
     }
 
     async createCart(data: CartsAddReqDto): Promise<Carts> {
-        const isValid: { isHas: boolean } = await this.getProductInCartByProductId(data.product_id);
+        const isValid: { isHas: boolean } = await this.getProductInCartByProductId(data.product_id, data.customer_id);
 
         if (isValid.isHas) {
             const cart = new Carts();
@@ -66,10 +66,16 @@ export class CartsService {
         }
     }
 
-    async getProductInCartByProductId(productId: number): Promise<any> {
-        const product = await this.cartService.findOneBy({
-            product_: productId,
-        });
+    async getProductInCartByProductId(productId: number, customerId: number): Promise<any> {
+        const product = await this.cartService
+            .createQueryBuilder('carts')
+            .addSelect('product.name', 'product_name')
+            .addSelect('customer.name', 'customer_name')
+            .innerJoin('products', 'product', 'product.id=carts.product_')
+            .innerJoin('customers', 'customer', 'customer.id=carts.customer_')
+            .where(`carts.customer_id=${customerId}`)
+            .andWhere(`carts.product_id=${productId}`)
+            .getOne();
 
         if (product) {
             return {
