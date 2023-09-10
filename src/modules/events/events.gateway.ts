@@ -24,6 +24,11 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         console.log('disconnect ID: ', client.id);
     }
 
+    @SubscribeMessage('add-to-cart')
+    async handleAddToCart(@MessageBody() payload) {
+        this.server.emit(`add-to-cart-give`, payload);
+    }
+
     @SubscribeMessage('messageToUser')
     async handleMessageUser(@MessageBody() payload) {
         this.server.socketsJoin(payload.id);
