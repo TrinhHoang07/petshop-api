@@ -50,7 +50,16 @@ export class BlogsController {
 
         if (id) {
             const data = await this.blogsService.getBlogById(+id);
-            if (data) return data;
+
+            console.log(data);
+
+            if (data) {
+                return {
+                    message: 'success',
+                    code: HttpStatus.OK,
+                    data: data,
+                };
+            }
 
             return {
                 message: 'Not Found',
