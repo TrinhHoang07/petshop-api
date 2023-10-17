@@ -4,8 +4,10 @@ import { Customers } from './customers.entity';
 import { Repository, UpdateResult } from 'typeorm';
 import { CustomersRegisterReqDto } from './dto/customers-register.req.dto';
 import { CustomersReqDto } from './dto/customers.req.dto';
-import { async } from 'rxjs';
 import { CustomerCreateDto } from './dto/customer-create.req.dto';
+import { async } from 'rxjs';
+import { CustomersAddressReqDto } from './dto/customers-address.req.dto';
+import { CustomersPasswordReqDto } from './dto/customers-password.req.dto';
 
 @Injectable()
 export class CustomersService {
@@ -61,6 +63,20 @@ export class CustomersService {
     // update customer by id
     async updateCustomerById(id: number, data: CustomersReqDto): Promise<UpdateResult> {
         return await this.customerEntity.update(id, data);
+    }
+
+    // update address customer by id
+    async updateAddressCustomer(id: number, data: CustomersAddressReqDto): Promise<UpdateResult> {
+        return await this.customerEntity.update(id, {
+            address: data.address,
+        });
+    }
+
+    // update password customer by id
+    async updatePasswordCustomer(id: number, data: CustomersPasswordReqDto): Promise<UpdateResult> {
+        return await this.customerEntity.update(id, {
+            password: data.password,
+        });
     }
 
     // delete customer by id

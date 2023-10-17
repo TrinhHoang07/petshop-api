@@ -22,6 +22,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { join } from 'path';
 import { createReadStream } from 'fs';
+import { CustomersAddressReqDto } from './dto/customers-address.req.dto';
+import { CustomersPasswordReqDto } from './dto/customers-password.req.dto';
 
 @Controller('customers')
 export class CustomersController {
@@ -79,6 +81,69 @@ export class CustomersController {
         };
     }
 
+    @UseGuards(AuthGuard('jwt'))
+    @Put('/update/address/:id')
+    async updateAddressCustomerById(
+        @Param('id') id: string,
+        @Body(new ValidationPipe()) data: CustomersAddressReqDto,
+    ): Promise<UpdateResult | Object> {
+        if (id) {
+            const isUpdated = await this.customerService.updateAddressCustomer(+id, data);
+
+            if (isUpdated.affected === 1) {
+                const data = await this.customerService.getCustomerById(+id);
+
+                if (data)
+                    return {
+                        message: 'success',
+                        code: HttpStatus.CREATED,
+                        data: data,
+                    };
+
+                return {
+                    message: 'Not Found',
+                    code: HttpStatus.BAD_REQUEST,
+                };
+            }
+        }
+
+        return {
+            message: 'Not Found Customer',
+            code: HttpStatus.BAD_REQUEST,
+        };
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Put('/update/password/:id')
+    async updatePasswordCustomerById(
+        @Param('id') id: string,
+        @Body(new ValidationPipe()) data: CustomersPasswordReqDto,
+    ): Promise<UpdateResult | Object> {
+        if (id) {
+            const isUpdated = await this.customerService.updatePasswordCustomer(+id, data);
+
+            if (isUpdated.affected === 1) {
+                const data = await this.customerService.getCustomerById(+id);
+
+                if (data)
+                    return {
+                        message: 'success',
+                        code: HttpStatus.CREATED,
+                        data: data,
+                    };
+
+                return {
+                    message: 'Not Found',
+                    code: HttpStatus.BAD_REQUEST,
+                };
+            }
+        }
+
+        return {
+            message: 'Not Found Customer',
+            code: HttpStatus.BAD_REQUEST,
+        };
+    }
     ////////////////////////////// test upload => OK
     @Post('/test/upload')
     @UseInterceptors(
