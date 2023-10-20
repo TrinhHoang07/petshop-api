@@ -13,6 +13,7 @@ import { BlogsModule } from './modules/blogs/blogs.module';
 import { ChatsModule } from './modules/chats/chats.module';
 import { EventsModule } from './modules/events/events.module';
 import { OrdersModule } from './modules/orders/orders.module';
+import { AddressModule } from './modules/address/address.module';
 
 @Module({
     imports: [
@@ -27,6 +28,7 @@ import { OrdersModule } from './modules/orders/orders.module';
         ChatsModule,
         EventsModule,
         OrdersModule,
+        AddressModule,
     ],
     controllers: [AppController],
     providers: [AppService],

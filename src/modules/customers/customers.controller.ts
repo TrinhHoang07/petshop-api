@@ -151,7 +151,7 @@ export class CustomersController {
             storage: diskStorage({
                 destination: './uploads',
                 filename(_, file, callback) {
-                    const fileName = `${file.originalname}`;
+                    const fileName = `${file.originalname}}`;
 
                     callback(null, fileName);
                 },
@@ -176,7 +176,7 @@ export class CustomersController {
 
         console.log('J', join(process.cwd(), 'uploads', 'girlcute.jpg'));
 
-        const file = createReadStream(join(process.cwd(), 'uploads', 'girlcute.jpg'));
+        const file = createReadStream(join(process.cwd(), 'uploads', 'atccccc.jpg'));
 
         return new StreamableFile(file);
     }
