@@ -14,11 +14,17 @@ import { ChatsModule } from './modules/chats/chats.module';
 import { EventsModule } from './modules/events/events.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { AddressModule } from './modules/address/address.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
         TypeOrmModule.forRootAsync(TypeOrmConfigAsync),
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname, '..', 'uploads'),
+            serveRoot: '/images/uploads',
+        }),
         AuthModule,
         AdminModule,
         CustomersModule,
