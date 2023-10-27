@@ -10,7 +10,8 @@ import {
     Post,
     UseInterceptors,
     UploadedFile,
-    Response,
+    Res,
+    Req,
     StreamableFile,
 } from '@nestjs/common';
 import { CustomersService } from './customers.service';
@@ -144,40 +145,70 @@ export class CustomersController {
             code: HttpStatus.BAD_REQUEST,
         };
     }
+
     ////////////////////////////// test upload => OK
-    @Post('/test/upload')
+    @Post('/test/upload/:id')
     @UseInterceptors(
         FileInterceptor('file', {
             storage: diskStorage({
                 destination: './uploads',
                 filename(_, file, callback) {
-                    const fileName = `${file.originalname}}`;
+                    const fileName = `${file.originalname}`;
 
                     callback(null, fileName);
                 },
             }),
         }),
     )
-    testUp(
+    async uploadAvatar(
         @UploadedFile()
         file: Express.Multer.File,
+        @Param('id') id: string,
+        @Req() req: Request,
     ) {
-        console.log('file uploaded: ', file);
+        const isUpdated = await this.customerService.updateAvatarCustomer(+id, {
+            avatar_path: `http://${req.headers['host']}/images/uploads/${file.originalname}`,
+        });
 
-        return 'OK';
+        if (isUpdated.affected === 1) {
+            return {
+                message: 'success',
+                linkAvatar: `http://${req.headers['host']}/images/uploads/${file.originalname}`,
+            };
+        }
+
+        return {
+            message: 'error',
+        };
     }
 
     //////////////////////////// test get avatar ==> OK
-    @Get('/test/file')
-    getFile(@Response({ passthrough: true }) res): StreamableFile {
-        res.set({
-            'Content-Type': 'image/webp,image/apng',
-        });
+    @Get('/test/file/:id')
+    async getFile(@Res({ passthrough: true }) res, @Param('id') id: string): Promise<StreamableFile | Object> {
+        const customer = await this.customerService.getCustomerById(+id);
 
-        console.log('J', join(process.cwd(), 'uploads', 'girlcute.jpg'));
+        console.log('id', id);
 
-        const file = createReadStream(join(process.cwd(), 'uploads', 'atccccc.jpg'));
+        console.log('customer', customer);
 
-        return new StreamableFile(file);
+        if (customer.avatar_path) {
+            res.set({
+                'Content-Type': 'image/webp,image/apng',
+            });
+            const file = createReadStream(join(process.cwd(), customer.avatar_path));
+            return new StreamableFile(file);
+        }
+
+        return {
+            message: 'no image available',
+        };
+
+        // console.log('J', join(process.cwd(), 'uploads', 'girlcute.jpg'));
+
+        // const file = createReadStream(join(process.cwd(), 'uploads', 'atccccc.jpg'));
+
+        // console.log(file.path);
+
+        // return new StreamableFile(file);
     }
 }

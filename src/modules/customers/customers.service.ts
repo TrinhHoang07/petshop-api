@@ -5,9 +5,9 @@ import { Repository, UpdateResult } from 'typeorm';
 import { CustomersRegisterReqDto } from './dto/customers-register.req.dto';
 import { CustomersReqDto } from './dto/customers.req.dto';
 import { CustomerCreateDto } from './dto/customer-create.req.dto';
-import { async } from 'rxjs';
 import { CustomersAddressReqDto } from './dto/customers-address.req.dto';
 import { CustomersPasswordReqDto } from './dto/customers-password.req.dto';
+import { CustomersAvatarReqDto } from './dto/customers-avatar.req.dto';
 
 @Injectable()
 export class CustomersService {
@@ -63,6 +63,13 @@ export class CustomersService {
     // update customer by id
     async updateCustomerById(id: number, data: CustomersReqDto): Promise<UpdateResult> {
         return await this.customerEntity.update(id, data);
+    }
+
+    // update avatar customer by id
+    async updateAvatarCustomer(id: number, data: CustomersAvatarReqDto): Promise<UpdateResult> {
+        return await this.customerEntity.update(id, {
+            avatar_path: data.avatar_path,
+        });
     }
 
     // update address customer by id
