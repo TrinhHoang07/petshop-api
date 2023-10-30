@@ -34,6 +34,11 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.emit(`create-address-give`, payload);
     }
 
+    @SubscribeMessage('update-address')
+    async handleUpdateAddress(@MessageBody() payload) {
+        this.server.emit(`update-address-give`, payload);
+    }
+
     @SubscribeMessage('messageToUser')
     async handleMessageUser(@MessageBody() payload) {
         this.server.socketsJoin(payload.id);

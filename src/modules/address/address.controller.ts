@@ -1,7 +1,20 @@
-import { Controller, HttpStatus, Get, UseGuards, Post, Body, UsePipes, ValidationPipe, Param } from '@nestjs/common';
+import {
+    Controller,
+    HttpStatus,
+    Get,
+    UseGuards,
+    Post,
+    Body,
+    UsePipes,
+    ValidationPipe,
+    Param,
+    Put,
+    Delete,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AddressService } from './address.service';
 import { AddressCreateDto } from './dto/address-create.req.dto';
+import { AddressUpdateDto } from './dto/address.update.req.dto';
 
 @Controller('address')
 export class AddressController {
@@ -51,6 +64,48 @@ export class AddressController {
                 message: 'success',
                 statusCode: HttpStatus.OK,
                 data: addresses,
+            };
+        }
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @UsePipes(new ValidationPipe())
+    @Put('/address/update/:id')
+    async updateAddressById(@Param('id') id: string, @Body() data: AddressUpdateDto): Promise<Object> {
+        console.log('dataaaaa: ', data);
+
+        const isUpdated = await this.customerService.updateAddressById(+data.id, data);
+
+        if (isUpdated.affected === 1) {
+            const customer = await this.customerService.getAddressByCustomerId(+id);
+
+            return {
+                message: 'success',
+                statusCode: HttpStatus.OK,
+                data: customer,
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: HttpStatus.BAD_REQUEST,
+            };
+        }
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Delete('/address/delete/:id')
+    async deleteAddressById(@Param('id') id: string): Promise<Object> {
+        const isUpdated = await this.customerService.deleteAddressById(+id);
+
+        if (isUpdated.affected === 1) {
+            return {
+                message: 'success',
+                statusCode: HttpStatus.OK,
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: HttpStatus.BAD_REQUEST,
             };
         }
     }

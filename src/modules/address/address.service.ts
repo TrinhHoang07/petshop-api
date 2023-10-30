@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { Address } from './address.entity';
 import { AddressCreateDto } from './dto/address-create.req.dto';
+import { AddressUpdateDto } from './dto/address.update.req.dto';
 
 @Injectable()
 export class AddressService {
@@ -31,5 +32,21 @@ export class AddressService {
         return await this.addressEntity.findBy({
             customer_: customerId,
         });
+    }
+
+    // update address by customer id
+    async updateAddressById(id: number, data: AddressUpdateDto): Promise<UpdateResult> {
+        return await this.addressEntity.update(id, {
+            full_name: data.full_name,
+            phone_number: data.phone_number,
+            main_address: data.main_address,
+            detail_address: data.detail_address,
+            type: data.type,
+        });
+    }
+
+    // delete address by id
+    async deleteAddressById(id: number): Promise<UpdateResult> {
+        return await this.addressEntity.softDelete(id);
     }
 }
