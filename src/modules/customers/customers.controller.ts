@@ -121,21 +121,27 @@ export class CustomersController {
         @Body(new ValidationPipe()) data: CustomersPasswordReqDto,
     ): Promise<UpdateResult | Object> {
         if (id) {
-            const isUpdated = await this.customerService.updatePasswordCustomer(+id, data);
+            const customer = await this.customerService.getCustomerByIdAndPassword(+id, data.oldPassword);
 
-            if (isUpdated.affected === 1) {
-                const data = await this.customerService.getCustomerById(+id);
+            if (customer) {
+                const isUpdated = await this.customerService.updatePasswordCustomer(+id, data);
 
-                if (data)
+                if (isUpdated.affected === 1) {
                     return {
                         message: 'success',
                         code: HttpStatus.CREATED,
-                        data: data,
                     };
-
+                } else {
+                    return {
+                        message: 'success',
+                        code: HttpStatus.FAILED_DEPENDENCY,
+                    };
+                }
+            } else {
                 return {
-                    message: 'Not Found',
-                    code: HttpStatus.BAD_REQUEST,
+                    message: 'mismatched',
+                    detail: 'password is not matches, try again',
+                    statusCode: HttpStatus.NOT_FOUND,
                 };
             }
         }

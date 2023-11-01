@@ -60,6 +60,14 @@ export class CustomersService {
         });
     }
 
+    // get custoemr by id & password
+    async getCustomerByIdAndPassword(id: number, password: string): Promise<Customers> {
+        return await this.customerEntity.findOneBy({
+            id: id,
+            password: password,
+        });
+    }
+
     // update customer by id
     async updateCustomerById(id: number, data: CustomersReqDto): Promise<UpdateResult> {
         return await this.customerEntity.update(id, data);
