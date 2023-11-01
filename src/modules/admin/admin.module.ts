@@ -7,9 +7,10 @@ import { TestTokenMiddleware } from 'src/middleware/testToken.middleware';
 import { BlogsModule } from '../blogs/blogs.module';
 import { CustomersModule } from '../customers/customers.module';
 import { ProductsModule } from '../products/products.module';
+import { OrdersModule } from '../orders/orders.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Admin]), BlogsModule, CustomersModule, ProductsModule],
+    imports: [TypeOrmModule.forFeature([Admin]), BlogsModule, CustomersModule, ProductsModule, OrdersModule],
     controllers: [AdminController],
     providers: [AdminService],
     exports: [AdminService],

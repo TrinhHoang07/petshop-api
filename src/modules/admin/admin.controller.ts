@@ -24,6 +24,7 @@ import { ProductsService } from '../products/products.service';
 import { ProductsReqDto } from '../products/dto/products.req.dto';
 import { Products } from '../products/products.entity';
 import { CustomerCreateDto } from '../customers/dto/customer-create.req.dto';
+import { OrdersService } from '../orders/orders.service';
 
 @Controller('admin')
 export class AdminController {
@@ -32,6 +33,7 @@ export class AdminController {
         private blogsService: BlogsService,
         private customerService: CustomersService,
         private productsService: ProductsService,
+        private ordersService: OrdersService,
     ) {}
 
     @Get('/all')
@@ -213,6 +215,18 @@ export class AdminController {
         return {
             message: 'Error delete product',
             code: HttpStatus.BAD_REQUEST,
+        };
+    }
+
+    // ORDERS
+    @Get('orders/all')
+    async getAllOrders(): Promise<Object> {
+        const allOrders = await this.ordersService.getAllOrders();
+
+        return {
+            message: 'success',
+            statusCode: HttpStatus.OK,
+            data: allOrders,
         };
     }
 }
