@@ -25,6 +25,7 @@ import { ProductsReqDto } from '../products/dto/products.req.dto';
 import { Products } from '../products/products.entity';
 import { CustomerCreateDto } from '../customers/dto/customer-create.req.dto';
 import { OrdersService } from '../orders/orders.service';
+import { OrdersUpdateStatusReqDto } from '../orders/dto/orders-update-status.req.dto';
 
 @Controller('admin')
 export class AdminController {
@@ -228,5 +229,25 @@ export class AdminController {
             statusCode: HttpStatus.OK,
             data: allOrders,
         };
+    }
+
+    @Put('orders/status/:id')
+    async updateStatusOrder(
+        @Param('id') id: string,
+        @Body(new ValidationPipe()) data: OrdersUpdateStatusReqDto,
+    ): Promise<Object> {
+        const isUpdated = await this.ordersService.updateStatus(+id, data);
+
+        if (isUpdated.affected === 1) {
+            return {
+                message: 'success',
+                statusCode: HttpStatus.OK,
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: HttpStatus.BAD_REQUEST,
+            };
+        }
     }
 }
