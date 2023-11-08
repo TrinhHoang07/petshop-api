@@ -4,32 +4,20 @@ import {
     CreateDateColumn,
     DeleteDateColumn,
     Entity,
-    ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { Customers } from '../customers/customers.entity';
 
-@Entity('chats')
-export class Chats extends BaseEntity {
+@Entity('conversations')
+export class Conversations extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    @ManyToOne(() => Customers, (cus) => cus.id)
-    customer_: number;
-
     @Column({
         type: 'varchar',
         nullable: true,
     })
-    message_emit: string;
-
-    @Column({
-        type: 'varchar',
-        nullable: true,
-    })
-    message_on: string;
+    conversation_name: string;
 
     @CreateDateColumn()
     created_at: Date;

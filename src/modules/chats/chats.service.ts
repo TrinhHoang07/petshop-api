@@ -1,25 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Chats } from './chats.entity';
-import { ChatsAddDto } from './dto/chats-add.req.dto';
+import { Conversations } from './conversation.entity';
+import { Messages } from './message.entity';
+import { UserConversations } from './user-conversation.entity';
 
 @Injectable()
 export class ChatsService {
-    constructor(@InjectRepository(Chats) private chatsService: Repository<Chats>) {}
-
-    async getChatsByUserId(userId: number): Promise<Chats[]> {
-        return await this.chatsService.findBy({
-            customer_: userId,
-        });
-    }
-
-    async createChats(data: ChatsAddDto): Promise<Chats> {
-        const chat = new Chats();
-        chat.customer_ = data.customer_id;
-        chat.message_emit = data.message_emit;
-        chat.message_on = data.message_on;
-
-        return chat.save();
-    }
+    constructor(
+        @InjectRepository(Conversations) private conver: Repository<Conversations>,
+        @InjectRepository(Messages) private message: Repository<Messages>,
+        @InjectRepository(UserConversations) private userConver: Repository<UserConversations>,
+    ) {}
 }
