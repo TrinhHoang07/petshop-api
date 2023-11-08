@@ -49,6 +49,18 @@ export class CustomersService {
         });
     }
 
+    // search products
+    async searchCustomers(query: { search: string }): Promise<Customers[]> {
+        console.log('service: ', query);
+
+        const data = await this.customerEntity
+            .createQueryBuilder('customers')
+            .where('customers.name like :name', { name: '%' + query.search + '%' })
+            .getMany();
+
+        return data;
+    }
+
     // get customer by username and password
     async getCustomerByUsernameAndPassword(username: string, password: string) {
         console.log(username);

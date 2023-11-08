@@ -12,6 +12,7 @@ import {
     UploadedFile,
     Res,
     Req,
+    Query,
     StreamableFile,
 } from '@nestjs/common';
 import { CustomersService } from './customers.service';
@@ -48,6 +49,30 @@ export class CustomersController {
             message: 'Not Found Customer',
             code: HttpStatus.BAD_REQUEST,
         };
+    }
+
+    // search products
+    @UseGuards(AuthGuard('jwt'))
+    @Get('/search')
+    async searchProducts(@Query() query: { query: string }) {
+        console.log('query customers: ', query);
+
+        const data = await this.customerService.searchCustomers(JSON.parse(atob(query.query as string)));
+
+        console.log('data: ', data);
+
+        if (data) {
+            return {
+                message: 'success',
+                statusCode: 200,
+                data: data,
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: 404,
+            };
+        }
     }
 
     @UseGuards(AuthGuard('jwt'))
