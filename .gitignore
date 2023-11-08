@@ -4,6 +4,10 @@
 
 .env
 
+#uploads
+/uploads
+uploads
+
 # Logs
 logs
 *.log
