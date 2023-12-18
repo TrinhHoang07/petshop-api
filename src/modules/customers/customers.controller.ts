@@ -75,6 +75,7 @@ export class CustomersController {
         }
     }
 
+    // update customer
     @UseGuards(AuthGuard('jwt'))
     @Put('/update/:id')
     async updateCustomerById(
@@ -107,6 +108,7 @@ export class CustomersController {
         };
     }
 
+    // update address
     @UseGuards(AuthGuard('jwt'))
     @Put('/update/address/:id')
     async updateAddressCustomerById(
@@ -139,6 +141,7 @@ export class CustomersController {
         };
     }
 
+    // update password
     @UseGuards(AuthGuard('jwt'))
     @Put('/update/password/:id')
     async updatePasswordCustomerById(

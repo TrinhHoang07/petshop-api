@@ -16,10 +16,10 @@ export class Friendship extends BaseEntity {
     id: number;
 
     @ManyToOne(() => Customers, (cus) => cus.id)
-    customer_1_: number;
+    customer_invite_: number;
 
     @ManyToOne(() => Customers, (cus) => cus.id)
-    customer_2_: number;
+    customer_: number;
 
     @Column({
         type: 'nvarchar',
