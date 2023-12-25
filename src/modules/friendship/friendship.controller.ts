@@ -8,6 +8,25 @@ export class FriendshipController {
     constructor(private friendshipService: FriendshipService) {}
 
     @UseGuards(AuthGuard('jwt'))
+    @Get('/friendship/friended/:id')
+    async getFriendshipedById(@Param('id') id: string): Promise<Object> {
+        if (id) {
+            const data = await this.friendshipService.getFriendshipedById(+id);
+
+            return {
+                message: 'success',
+                statusCode: HttpStatus.OK,
+                data,
+            };
+        } else {
+            return {
+                message: 'Bad request, not found ID!',
+                statusCode: HttpStatus.BAD_REQUEST,
+            };
+        }
+    }
+
+    @UseGuards(AuthGuard('jwt'))
     @Post('/friendship/create')
     async addNewInviteFriend(@Body(new ValidationPipe()) data: FriendshipCreateDto): Promise<Object> {
         const fr = await this.friendshipService.addNewFriend(data);

@@ -18,6 +18,27 @@ export class FriendshipService {
         return await this.friendshipService.save(fr);
     }
 
+    // get friendshiped by id & id
+    async getFriendshipedById(id: number): Promise<Friendship[]> {
+        return await this.friendshipService
+            .createQueryBuilder('friendship')
+            .addSelect('customer.id', 'customer_id')
+            .addSelect('customer.name', 'customer_name')
+            .addSelect('customer.address', 'customer_address')
+            .addSelect('customer.phone_number', 'customer_phone_number')
+            .addSelect('customer.birth_date', 'customer_birth_date')
+            .addSelect('customer.avatar_path', 'customer_avatar_path')
+            .addSelect('customer.gender', 'customer_gender')
+            .leftJoin(
+                'customers',
+                'customer',
+                'customer.id=friendship.customerInvite_id OR customer.id=friendship.customer_id',
+            )
+            .where('friendship.status=:value', { value: 'friended' })
+            .andWhere(`(friendship.customerInvite_id=${id} OR friendship.customer_id=${id})`)
+            .getRawMany();
+    }
+
     // get friendship invite by id
     async getFriendshipByIdInvite(id: number): Promise<Friendship[]> {
         return await this.friendshipService
