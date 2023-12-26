@@ -2,6 +2,7 @@ import { Controller, Post, Get, Param, HttpStatus, UseGuards, ValidationPipe, Bo
 import { FriendshipService } from './friendship.service';
 import { AuthGuard } from '@nestjs/passport';
 import { FriendshipCreateDto } from './dto/friendship-create.req.dto';
+import { FriendshipUpdateStatusDto } from './dto/friendship-update-status.req.dto';
 
 @Controller('friendship')
 export class FriendshipController {
@@ -80,6 +81,24 @@ export class FriendshipController {
             message: 'Bad request, not found ID!',
             statusCode: HttpStatus.BAD_REQUEST,
         };
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Post('/friendship/update/status')
+    async handleFriendshipStatus(@Body(new ValidationPipe()) data: FriendshipUpdateStatusDto): Promise<Object> {
+        const isUpdate = await this.friendshipService.handleStatusFriend(data);
+
+        if (isUpdate.affected !== 0) {
+            return {
+                message: 'success',
+                statusCode: HttpStatus.OK,
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: HttpStatus.BAD_REQUEST,
+            };
+        }
     }
 
     @UseGuards(AuthGuard('jwt'))

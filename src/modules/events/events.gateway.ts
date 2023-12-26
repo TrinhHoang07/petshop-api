@@ -39,6 +39,13 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.emit(`update-address-give`, payload);
     }
 
+    @SubscribeMessage('accept-friend')
+    async handleAcceptFriend(@MessageBody() payload) {
+        console.log('accept friend: ' + payload);
+
+        this.server.emit(`accept-friend-give`, payload);
+    }
+
     @SubscribeMessage('messageToUser')
     async handleMessageUser(@MessageBody() payload) {
         this.server.socketsJoin(payload.id);

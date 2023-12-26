@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { Friendship } from './friendship.entity';
 import { FriendshipCreateDto } from './dto/friendship-create.req.dto';
+import { FriendshipUpdateStatusDto } from './dto/friendship-update-status.req.dto';
 
 @Injectable()
 export class FriendshipService {
@@ -69,6 +70,19 @@ export class FriendshipService {
             .where(`friendship.customer_id=${id}`)
             .andWhere(`friendship.status='waiting'`)
             .getRawMany();
+    }
+
+    // accept friendship
+    async handleStatusFriend(data: FriendshipUpdateStatusDto): Promise<UpdateResult> {
+        return await this.friendshipService
+            .createQueryBuilder()
+            // .innerJoin('customers', 'cus', 'cus.id=fr.customerInvite_id OR cus.id=fr.customer_id')
+            .update(Friendship)
+            .set({
+                status: data.status,
+            })
+            .where(`customer_id=${data.customer_id} AND customerInvite_id=${data.customer_invite}`)
+            .execute();
     }
 
     // remove friendship by id
