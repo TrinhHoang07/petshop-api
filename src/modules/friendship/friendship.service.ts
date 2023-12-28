@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { Friendship } from './friendship.entity';
 import { FriendshipCreateDto } from './dto/friendship-create.req.dto';
 import { FriendshipUpdateStatusDto } from './dto/friendship-update-status.req.dto';
@@ -86,9 +86,12 @@ export class FriendshipService {
     }
 
     // remove friendship by id
-    async removeFriendshipById(id: number): Promise<UpdateResult> {
-        return await this.friendshipService.softDelete({
-            customer_: id,
-        });
+    async removeFriendshipById(idInvite: number, idGiveInvite: number): Promise<DeleteResult> {
+        return await this.friendshipService
+            .createQueryBuilder()
+            .softDelete()
+            .from(Friendship)
+            .where(`customer_id=${idGiveInvite} AND customerInvite_id=${idInvite}`)
+            .execute();
     }
 }

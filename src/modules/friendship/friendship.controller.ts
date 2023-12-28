@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Param, HttpStatus, UseGuards, ValidationPipe, Body, Delete } from '@nestjs/common';
+import { Controller, Post, Get, Param, HttpStatus, UseGuards, ValidationPipe, Body, Put } from '@nestjs/common';
 import { FriendshipService } from './friendship.service';
 import { AuthGuard } from '@nestjs/passport';
 import { FriendshipCreateDto } from './dto/friendship-create.req.dto';
@@ -102,10 +102,10 @@ export class FriendshipController {
     }
 
     @UseGuards(AuthGuard('jwt'))
-    @Delete('/friendship/delete/:id')
-    async deleteFriendshipById(@Param('id') id: string): Promise<Object> {
-        if (id) {
-            const data = await this.friendshipService.removeFriendshipById(+id);
+    @Put('/friendship/delete')
+    async deleteFriendshipById(@Body() obj: FriendshipCreateDto): Promise<Object> {
+        if (obj) {
+            const data = await this.friendshipService.removeFriendshipById(obj.customer_invite, obj.customer_id);
 
             if (data.affected !== 0) {
                 return {
