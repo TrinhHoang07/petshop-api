@@ -18,7 +18,11 @@ export class Messages extends BaseEntity {
 
     @Column()
     @ManyToOne(() => Customers, (cus) => cus.id)
-    customer_: number;
+    sender_: number;
+
+    @Column()
+    @ManyToOne(() => Customers, (cus) => cus.id)
+    receiver_: number;
 
     @Column()
     @ManyToOne(() => Conversations, (conver) => conver.id)
