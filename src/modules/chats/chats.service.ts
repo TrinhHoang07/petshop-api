@@ -75,6 +75,7 @@ export class ChatsService {
     async getJoinedConversationsById(id: number) {
         return await this.userConver
             .createQueryBuilder('userConver')
+            .addSelect('conver.id', 'conver_id')
             .addSelect('cus.id')
             .addSelect('cus.avatar_path')
             .addSelect('cus.name')
@@ -97,8 +98,11 @@ export class ChatsService {
 
     // get messages by conversation id
     async getMessagesByConversationId(conversationId: number): Promise<Messages[]> {
-        return await this.message.findBy({
-            conversation_: conversationId,
-        });
+        return await this.message
+            .createQueryBuilder('message')
+            .addSelect('cus.avatar_path')
+            .innerJoin('customers', 'cus', 'cus.id=message.sender_id')
+            .where(`message.conversation_id=${conversationId}`)
+            .getRawMany();
     }
 }
