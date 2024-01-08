@@ -28,6 +28,9 @@ export class ChatsController {
                 return {
                     message: 'success',
                     statusCode: HttpStatus.OK,
+                    data: {
+                        id_conver: conver.id,
+                    },
                 };
             }
         }

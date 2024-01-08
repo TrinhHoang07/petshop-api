@@ -66,8 +66,8 @@ export class ChatsService {
             .addSelect('userConver.customer_id')
             .addSelect('conver.created_by_customer_')
             .innerJoin('userConversations', 'userConver', 'userConver.conversation_id=conver.id')
-            .where('conver.created_by_customer_=:id', { id: data.created_id })
-            .andWhere('userConver.customer_id=:customer_id', { customer_id: data.customer_id })
+            .where(`conver.created_by_customer_=${data.created_id} AND userConver.customer_id=${data.customer_id}`)
+            .orWhere(`conver.created_by_customer_=${data.customer_id} AND userConver.customer_id=${data.created_id}`)
             .getRawOne();
     }
 
@@ -103,6 +103,7 @@ export class ChatsService {
             .addSelect('cus.avatar_path')
             .innerJoin('customers', 'cus', 'cus.id=message.sender_id')
             .where(`message.conversation_id=${conversationId}`)
+            .orderBy('message.id')
             .getRawMany();
     }
 }
