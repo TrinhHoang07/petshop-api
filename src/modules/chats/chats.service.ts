@@ -7,6 +7,7 @@ import { UserConversations } from './user-conversation.entity';
 import { AddConversation } from './dto/add.conversation.req.dto';
 import { AddUserConversation } from './dto/add.user-conversation.req.dto';
 import { CheckConversation } from './dto/check.conversation.dto';
+import { Customers } from '../customers/customers.entity';
 
 @Injectable()
 export class ChatsService {
@@ -37,14 +38,25 @@ export class ChatsService {
 
     // get customer conversation by created id
     async getCustomerConversationByCreatedId(id: number) {
+        const subQuery = this.message
+            .createQueryBuilder('message')
+            .select('message.conversation_id', 'conversation_id')
+            .addSelect('MAX(message.id)', 'message_id')
+            .groupBy('message.conversation_id');
+
+        const subQuerySql = subQuery.getQuery();
+        const subQueryParameters = subQuery.getParameters();
+
         return await this.conver
             .createQueryBuilder('conver')
-            .addSelect('cus.id')
-            .addSelect('cus.name')
-            .addSelect('cus.avatar_path')
+            .leftJoin('(' + subQuerySql + ')', 'subquery', 'conver.id = subquery.conversation_id')
             .innerJoin('userConversations', 'userConver', 'userConver.conversation_id=conver.id')
-            .innerJoin('customers', 'cus', 'cus.id=userConver.customer_id')
-            .where('conver.created_by_customer_=:id', { id: id })
+            .innerJoin('customers', 'cus', 'userConver.customer_id = cus.id')
+            .addSelect(['cus.avatar_path', 'cus.id', 'cus.name'])
+            .addSelect(['messages.content', 'messages.sender_id', 'messages.id'])
+            .leftJoin('messages', 'messages', 'messages.id = subquery.message_id')
+            .where('conver.createdByCustomer_id = :id', { id: id })
+            .setParameters(subQueryParameters)
             .getRawMany();
     }
 
@@ -73,16 +85,45 @@ export class ChatsService {
 
     // get joined conversations by id customer
     async getJoinedConversationsById(id: number) {
+        const subQuery = this.message
+            .createQueryBuilder('message')
+            .select('message.conversation_id', 'conversation_id')
+            .addSelect('MAX(message.id)', 'message_id')
+            .groupBy('message.conversation_id');
+
+        const subQuerySql = subQuery.getQuery();
+        const subQueryParameters = subQuery.getParameters();
+
+        // .createQueryBuilder('conversations')
+        //     .innerJoin('(' + subQuerySql + ')', 'subquery', 'conversations.id = subquery.conversation_id')
+        //     .innerJoin('customers', 'customers', 'conversations.createdByCustomer_id = customers.id')
+        //     .addSelect(['customers.avatar_path', 'customers.id', 'customers.name'])
+        //     .addSelect(['messages.content', 'messages.sender_id', 'messages.id'])
+        //     .leftJoin('messages', 'messages', 'messages.id = subquery.message_id')
+        //     .where('conversations.createdByCustomer_id = :id', { id: id })
+        //     .setParameters(subQueryParameters)
+        //     .getRawMany();
+
         return await this.userConver
             .createQueryBuilder('userConver')
-            .addSelect('conver.id', 'conver_id')
-            .addSelect('cus.id')
-            .addSelect('cus.avatar_path')
-            .addSelect('cus.name')
+            .innerJoin('(' + subQuerySql + ')', 'subquery', 'userConver.conversation_id=subquery.conversation_id')
             .innerJoin('conversations', 'conver', 'conver.id=userConver.conversation_id')
             .innerJoin('customers', 'cus', 'cus.id=conver.created_by_customer_')
+            .addSelect('conver.id', 'conver_id')
+            .addSelect(['cus.id', 'cus.avatar_path', 'cus.name'])
+            .addSelect(['messages.content', 'messages.sender_id', 'messages.id'])
+            .leftJoin('messages', 'messages', 'messages.id = subquery.message_id')
             .where(`userConver.customer_id=${id}`)
+            .setParameters(subQueryParameters)
             .getRawMany();
+
+        // .addSelect('conver.id', 'conver_id')
+        // .addSelect('cus.id')
+        // .addSelect('cus.avatar_path')
+        // .addSelect('cus.name')
+        // .innerJoin('conversations', 'conver', 'conver.id=userConver.conversation_id')
+        // .innerJoin('customers', 'cus', 'cus.id=conver.created_by_customer_')
+        // .where(`userConver.customer_id=${id}`)
     }
 
     // add new message by conversation id
