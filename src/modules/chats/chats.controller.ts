@@ -24,7 +24,15 @@ export class ChatsController {
                 customer_id: data.customer_id,
             });
 
-            if (userConver) {
+            // add empty message
+            const message = await this.chatsService.addNewMessageByConversationId({
+                conversation_id: conver.id,
+                sender_id: data.created_by_customer,
+                receiver_id: data.customer_id,
+                content: '',
+            });
+
+            if (userConver && message) {
                 return {
                     message: 'success',
                     statusCode: HttpStatus.OK,
