@@ -57,6 +57,7 @@ export class ChatsService {
             .leftJoin('messages', 'messages', 'messages.id = subquery.message_id')
             .where('conver.createdByCustomer_id = :id', { id: id })
             .setParameters(subQueryParameters)
+            .orderBy('messages.created_at', 'DESC')
             .getRawMany();
     }
 
@@ -94,16 +95,6 @@ export class ChatsService {
         const subQuerySql = subQuery.getQuery();
         const subQueryParameters = subQuery.getParameters();
 
-        // .createQueryBuilder('conversations')
-        //     .innerJoin('(' + subQuerySql + ')', 'subquery', 'conversations.id = subquery.conversation_id')
-        //     .innerJoin('customers', 'customers', 'conversations.createdByCustomer_id = customers.id')
-        //     .addSelect(['customers.avatar_path', 'customers.id', 'customers.name'])
-        //     .addSelect(['messages.content', 'messages.sender_id', 'messages.id'])
-        //     .leftJoin('messages', 'messages', 'messages.id = subquery.message_id')
-        //     .where('conversations.createdByCustomer_id = :id', { id: id })
-        //     .setParameters(subQueryParameters)
-        //     .getRawMany();
-
         return await this.userConver
             .createQueryBuilder('userConver')
             .innerJoin('(' + subQuerySql + ')', 'subquery', 'userConver.conversation_id=subquery.conversation_id')
@@ -115,15 +106,8 @@ export class ChatsService {
             .leftJoin('messages', 'messages', 'messages.id = subquery.message_id')
             .where(`userConver.customer_id=${id}`)
             .setParameters(subQueryParameters)
+            .orderBy('messages.created_at', 'DESC')
             .getRawMany();
-
-        // .addSelect('conver.id', 'conver_id')
-        // .addSelect('cus.id')
-        // .addSelect('cus.avatar_path')
-        // .addSelect('cus.name')
-        // .innerJoin('conversations', 'conver', 'conver.id=userConver.conversation_id')
-        // .innerJoin('customers', 'cus', 'cus.id=conver.created_by_customer_')
-        // .where(`userConver.customer_id=${id}`)
     }
 
     // add new message by conversation id

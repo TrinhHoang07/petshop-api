@@ -50,10 +50,8 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     async handleMessageFriendUser(@MessageBody() payload) {
         console.log('chat-message-user: ' + payload);
 
-        this.server.socketsJoin(`chat-message-user-give-${payload.conversation_}`);
-        this.server
-            .in(`chat-message-user-give-${payload.conversation_}`)
-            .emit(`chat-message-user-give-${payload.conversation_}`, payload);
+        this.server.socketsJoin(`chat-message-user-give`);
+        this.server.in(`chat-message-user-give`).emit(`chat-message-user-give`, payload);
     }
 
     @SubscribeMessage('messageToUser')
