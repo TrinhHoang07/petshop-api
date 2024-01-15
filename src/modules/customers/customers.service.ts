@@ -113,12 +113,14 @@ export class CustomersService {
 
     // validate customer
     async checkCustomer(name: string, email: string): Promise<boolean> {
-        const a = await this.customerEntity.findBy({
-            name: name,
+        const a = await this.customerEntity.findOneBy({
             email: email,
         });
+        const b = await this.customerEntity.findOneBy({
+            name: name,
+        });
 
-        if (a.length > 0) {
+        if (a || b) {
             return false;
         }
 
