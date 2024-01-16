@@ -41,13 +41,13 @@ export class CustomersController {
 
             return {
                 message: 'Not Found',
-                code: HttpStatus.BAD_REQUEST,
+                statusCode: HttpStatus.BAD_REQUEST,
             };
         }
 
         return {
             message: 'Not Found Customer',
-            code: HttpStatus.BAD_REQUEST,
+            statusCode: HttpStatus.BAD_REQUEST,
         };
     }
 
@@ -91,20 +91,20 @@ export class CustomersController {
                 if (data)
                     return {
                         message: 'success',
-                        code: HttpStatus.CREATED,
+                        statusCode: HttpStatus.CREATED,
                         data: data,
                     };
 
                 return {
                     message: 'Not Found',
-                    code: HttpStatus.BAD_REQUEST,
+                    statusCode: HttpStatus.BAD_REQUEST,
                 };
             }
         }
 
         return {
             message: 'Not Found Customer',
-            code: HttpStatus.BAD_REQUEST,
+            statusCode: HttpStatus.BAD_REQUEST,
         };
     }
 
@@ -124,20 +124,20 @@ export class CustomersController {
                 if (data)
                     return {
                         message: 'success',
-                        code: HttpStatus.CREATED,
+                        statusCode: HttpStatus.CREATED,
                         data: data,
                     };
 
                 return {
                     message: 'Not Found',
-                    code: HttpStatus.BAD_REQUEST,
+                    statusCode: HttpStatus.BAD_REQUEST,
                 };
             }
         }
 
         return {
             message: 'Not Found Customer',
-            code: HttpStatus.BAD_REQUEST,
+            statusCode: HttpStatus.BAD_REQUEST,
         };
     }
 
@@ -157,26 +157,26 @@ export class CustomersController {
                 if (isUpdated.affected === 1) {
                     return {
                         message: 'success',
-                        code: HttpStatus.CREATED,
+                        statusCode: HttpStatus.CREATED,
                     };
                 } else {
                     return {
                         message: 'success',
-                        code: HttpStatus.FAILED_DEPENDENCY,
+                        statusCode: HttpStatus.FAILED_DEPENDENCY,
                     };
                 }
             } else {
                 return {
                     message: 'mismatched',
                     detail: 'password is not matches, try again',
-                    statusCode: HttpStatus.NOT_FOUND,
+                    statusstatusCode: HttpStatus.NOT_FOUND,
                 };
             }
         }
 
         return {
             message: 'Not Found Customer',
-            code: HttpStatus.BAD_REQUEST,
+            statusCode: HttpStatus.BAD_REQUEST,
         };
     }
 
