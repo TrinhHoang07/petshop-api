@@ -1,15 +1,72 @@
-import { Body, Controller, Get, Header, Post, Redirect, Req } from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpStatus, Param, Post, Put, Redirect, Req } from '@nestjs/common';
 import { Request, Response } from 'express';
 import * as moment from 'moment';
 import { sortObject } from 'src/utils/app.util';
 import * as querystring from 'qs';
 import * as crypto from 'crypto';
+import { PaymentService } from './payment.service';
 
 @Controller('/payment')
 export class PaymentController {
+    constructor(private paymentService: PaymentService) {}
+
+    @Post('/test/create')
+    async test(@Body() data: any) {
+        const payment = await this.paymentService.addNewPayment(data);
+
+        if (payment.id) {
+            return {
+                message: 'success',
+                statusCode: HttpStatus.OK,
+                data: payment,
+            };
+        }
+
+        return {
+            message: 'error',
+            statusCode: HttpStatus.BAD_REQUEST,
+        };
+    }
+
+    @Get('/test/get/:id')
+    async testGet(@Param('id') id: string) {
+        const data = await this.paymentService.getPaymentById(+id);
+
+        if (data.id) {
+            return {
+                message: 'success',
+                statusCode: HttpStatus.OK,
+                data,
+            };
+        }
+
+        return {
+            message: 'error',
+            statusCode: HttpStatus.BAD_REQUEST,
+        };
+    }
+
+    @Put('/test/update/:id')
+    async testPut(@Param('id') id: string, @Body() data: any) {
+        const update = await this.paymentService.updatePaymentStateById(+id, data.state);
+
+        if (update.affected !== 0) {
+            const data = await this.paymentService.getPaymentById(+id);
+
+            return {
+                message: 'success',
+                statusCode: HttpStatus.OK,
+                data,
+            };
+        }
+
+        return {
+            message: 'error',
+            statusCode: HttpStatus.BAD_REQUEST,
+        };
+    }
+
     @Post('/create')
-    // @Header('Access-Control-Allow-Origin', '*')
-    // @Header('Access-Control-Allow-Headers', 'X-Requested-With')
     async createNewPayment(@Body() data: any, @Req() req: Request, res: Response) {
         const date = new Date();
         const createDate = moment(date).format('YYYYMMDDHHmmss');
@@ -27,13 +84,14 @@ export class PaymentController {
         // const bankCode = data.bankCode;
         const currCode = 'VND';
         let vnp_Params = {};
+        // vnp_Params['pay_id'] = data.pay_id;
         vnp_Params['vnp_Version'] = '2.1.0';
         vnp_Params['vnp_Command'] = 'pay';
         vnp_Params['vnp_TmnCode'] = tmnCode;
         vnp_Params['vnp_Locale'] = 'vn';
         vnp_Params['vnp_CurrCode'] = currCode;
         vnp_Params['vnp_TxnRef'] = orderId;
-        vnp_Params['vnp_OrderInfo'] = data.orderInfo;
+        vnp_Params['vnp_OrderInfo'] = data.pay_id;
         vnp_Params['vnp_OrderType'] = 'other';
         vnp_Params['vnp_Amount'] = amount * 100;
         vnp_Params['vnp_ReturnUrl'] = returnUrl;
@@ -53,9 +111,8 @@ export class PaymentController {
 
         return {
             url: vnpUrl,
+            id: data.pay_id,
         };
-
-        // res.redirect(vnpUrl);
     }
 
     @Get('/vnpay_return')
@@ -73,10 +130,20 @@ export class PaymentController {
         const signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
 
         if (secureHash === signed) {
-            return {
-                code: vnp_Params['vnp_ResponseCode'],
-                message: 'Thanh toan thanh cong!',
-            };
+            if (vnp_Params['vnp_ResponseCode'] === '00') {
+                const updated = await this.paymentService.updatePaymentStateById(+vnp_Params['vnp_OrderInfo'], '01');
+
+                if (updated.affected !== 0) {
+                    return {
+                        message: 'Thanh toan thanh cong!',
+                    };
+                }
+            } else {
+                await this.paymentService.updatePaymentStateById(+vnp_Params['vnp_OrderInfo'], '03');
+                return {
+                    message: 'Thanh toan that bai',
+                };
+            }
         } else {
             return {
                 code: '97',
