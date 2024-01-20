@@ -16,11 +16,11 @@ export class UserConversations extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    // @Column()
     @ManyToOne(() => Customers, (cus) => cus.id)
     customer_: number;
 
-    @Column()
+    // @Column()
     @ManyToOne(() => Conversations, (conver) => conver.id)
     conversation_: number;
 

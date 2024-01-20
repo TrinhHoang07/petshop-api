@@ -26,8 +26,8 @@ export class OrdersService {
             .addSelect('customer.birth_date', 'customer_birth_date')
             .addSelect('customer.avatar_path', 'customer_avatar_path')
             .addSelect('customer.gender', 'customer_gender')
-            .innerJoin('products', 'product', 'product.id=orders.product_')
-            .innerJoin('customers', 'customer', 'customer.id=orders.customer_')
+            .innerJoin('products', 'product', 'product.id=orders.product_id')
+            .innerJoin('customers', 'customer', 'customer.id=orders.customer_id')
             .getRawMany();
     }
 
@@ -65,8 +65,8 @@ export class OrdersService {
             .addSelect('customer.birth_date', 'customer_birth_date')
             .addSelect('customer.avatar_path', 'customer_avatar_path')
             .addSelect('customer.gender', 'customer_gender')
-            .innerJoin('products', 'product', 'product.id=orders.product_')
-            .innerJoin('customers', 'customer', 'customer.id=orders.customer_')
+            .innerJoin('products', 'product', 'product.id=orders.product_id')
+            .innerJoin('customers', 'customer', 'customer.id=orders.customer_id')
             .where(`orders.customer_id=${customerId}`)
             .getRawMany();
     }

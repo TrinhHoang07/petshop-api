@@ -16,15 +16,15 @@ export class Messages extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    // @Column()
     @ManyToOne(() => Customers, (cus) => cus.id)
     sender_: number;
 
-    @Column()
+    // @Column()
     @ManyToOne(() => Customers, (cus) => cus.id)
     receiver_: number;
 
-    @Column()
+    // @Column()
     @ManyToOne(() => Conversations, (conver) => conver.id)
     conversation_: number;
 

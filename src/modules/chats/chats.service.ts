@@ -67,9 +67,9 @@ export class ChatsService {
             return await this.conver
                 .createQueryBuilder('conver')
                 .addSelect('userConver.customer_id')
-                .addSelect('conver.created_by_customer_')
+                .addSelect('conver.createdByCustomer_id')
                 .innerJoin('userConversations', 'userConver', 'userConver.conversation_id=conver.id')
-                .where('conver.created_by_customer_=:id', { id: data.created_id })
+                .where('conver.createdByCustomer_id=:id', { id: data.created_id })
                 .andWhere('userConver.customer_id=:customer_id', { customer_id: data.customer_id })
                 .getRawMany();
         }
@@ -77,10 +77,10 @@ export class ChatsService {
         return await this.conver
             .createQueryBuilder('conver')
             .addSelect('userConver.customer_id')
-            .addSelect('conver.created_by_customer_')
+            .addSelect('conver.createdByCustomer_id')
             .innerJoin('userConversations', 'userConver', 'userConver.conversation_id=conver.id')
-            .where(`conver.created_by_customer_=${data.created_id} AND userConver.customer_id=${data.customer_id}`)
-            .orWhere(`conver.created_by_customer_=${data.customer_id} AND userConver.customer_id=${data.created_id}`)
+            .where(`conver.createdByCustomer_id=${data.created_id} AND userConver.customer_id=${data.customer_id}`)
+            .orWhere(`conver.createdByCustomer_id=${data.customer_id} AND userConver.customer_id=${data.created_id}`)
             .getRawOne();
     }
 
@@ -99,7 +99,7 @@ export class ChatsService {
             .createQueryBuilder('userConver')
             .innerJoin('(' + subQuerySql + ')', 'subquery', 'userConver.conversation_id=subquery.conversation_id')
             .innerJoin('conversations', 'conver', 'conver.id=userConver.conversation_id')
-            .innerJoin('customers', 'cus', 'cus.id=conver.created_by_customer_')
+            .innerJoin('customers', 'cus', 'cus.id=conver.createdByCustomer_id')
             .addSelect('conver.id', 'conver_id')
             .addSelect(['cus.id', 'cus.avatar_path', 'cus.name'])
             .addSelect(['messages.content', 'messages.sender_id', 'messages.id'])

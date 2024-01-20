@@ -29,9 +29,18 @@ export class AddressService {
 
     // get all address by customer id
     async getAddressByCustomerId(customerId: number): Promise<Address[]> {
-        return await this.addressEntity.findBy({
-            customer_: customerId,
-        });
+        return await this.addressEntity
+            .createQueryBuilder('address')
+            .addSelect('address.id', 'id')
+            .addSelect('address.full_name', 'full_name')
+            .addSelect('address.customer_id', 'customer_id')
+            .addSelect('address.phone_number', 'phone_number')
+            .addSelect('address.main_address', 'main_address')
+            .addSelect('address.detail_address', 'detail_address')
+            .addSelect('address.type', 'type')
+            .innerJoin('customers', 'cus', 'cus.id=address.customer_id')
+            .where('address.customer_id=:id', { id: customerId })
+            .getRawMany();
     }
 
     // update address by customer id

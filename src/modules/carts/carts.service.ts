@@ -24,8 +24,8 @@ export class CartsService {
             .addSelect('customer.birth_date', 'customer_birth_date')
             .addSelect('customer.avatar_path', 'customer_avatar_path')
             .addSelect('customer.gender', 'customer_gender')
-            .innerJoin('products', 'product', 'product.id=carts.product_')
-            .innerJoin('customers', 'customer', 'customer.id=carts.customer_')
+            .innerJoin('products', 'product', 'product.id=carts.product_id')
+            .innerJoin('customers', 'customer', 'customer.id=carts.customer_id')
             .getRawMany();
     }
 
@@ -45,8 +45,8 @@ export class CartsService {
             .addSelect('customer.birth_date', 'customer_birth_date')
             .addSelect('customer.avatar_path', 'customer_avatar_path')
             .addSelect('customer.gender', 'customer_gender')
-            .innerJoin('products', 'product', 'product.id=carts.product_')
-            .innerJoin('customers', 'customer', 'customer.id=carts.customer_')
+            .innerJoin('products', 'product', 'product.id=carts.product_id')
+            .innerJoin('customers', 'customer', 'customer.id=carts.customer_id')
             .where(`carts.customer_id=${id}`)
             .getRawMany();
     }
@@ -71,8 +71,8 @@ export class CartsService {
             .createQueryBuilder('carts')
             .addSelect('product.name', 'product_name')
             .addSelect('customer.name', 'customer_name')
-            .innerJoin('products', 'product', 'product.id=carts.product_')
-            .innerJoin('customers', 'customer', 'customer.id=carts.customer_')
+            .innerJoin('products', 'product', 'product.id=carts.product_id')
+            .innerJoin('customers', 'customer', 'customer.id=carts.customer_id')
             .where(`carts.customer_id=${customerId}`)
             .andWhere(`carts.product_id=${productId}`)
             .getOne();
