@@ -10,7 +10,7 @@ import { PaymentService } from './payment.service';
 export class PaymentController {
     constructor(private paymentService: PaymentService) {}
 
-    @Post('/test/create')
+    @Post('/order/create')
     async test(@Body() data: any) {
         const payment = await this.paymentService.addNewPayment(data);
 
@@ -28,7 +28,7 @@ export class PaymentController {
         };
     }
 
-    @Get('/test/get/:id')
+    @Get('/order/:id')
     async testGet(@Param('id') id: string) {
         const data = await this.paymentService.getPaymentById(+id);
 
@@ -46,7 +46,7 @@ export class PaymentController {
         };
     }
 
-    @Put('/test/update/:id')
+    @Put('/order/update/:id')
     async testPut(@Param('id') id: string, @Body() data: any) {
         const update = await this.paymentService.updatePaymentStateById(+id, data.state);
 
@@ -131,7 +131,7 @@ export class PaymentController {
 
         if (secureHash === signed) {
             if (vnp_Params['vnp_ResponseCode'] === '00') {
-                const updated = await this.paymentService.updatePaymentStateById(+vnp_Params['vnp_OrderInfo'], '01');
+                const updated = await this.paymentService.updatePaymentStateById(+vnp_Params['vnp_OrderInfo'], '00');
 
                 if (updated.affected !== 0) {
                     return {
@@ -145,8 +145,9 @@ export class PaymentController {
                 };
             }
         } else {
+            await this.paymentService.updatePaymentStateById(+vnp_Params['vnp_OrderInfo'], '97');
             return {
-                code: '97',
+                message: 'That bai, check sum failed',
             };
         }
     }
