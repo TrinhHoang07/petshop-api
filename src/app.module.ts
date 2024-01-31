@@ -18,6 +18,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { FriendshipModule } from './modules/friendship/friendship.module';
 import { PaymentModule } from './modules/payment/payment.module';
+import { NotificationModule } from './modules/notification/notification.module';
 
 @Module({
     imports: [
@@ -39,6 +40,7 @@ import { PaymentModule } from './modules/payment/payment.module';
         AddressModule,
         FriendshipModule,
         PaymentModule,
+        NotificationModule,
     ],
     controllers: [AppController],
     providers: [AppService],
