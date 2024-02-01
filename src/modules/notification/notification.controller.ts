@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Param, Post, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post, Put, ValidationPipe } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { NotiCreateDto } from './dto/noti-create.req.dto';
 
@@ -64,6 +64,30 @@ export class NotificationsController {
         return {
             message: 'error',
             statusCode: HttpStatus.BAD_REQUEST,
+        };
+    }
+
+    @Get('/seen/:id')
+    async updateSeen(@Param('id') id: string): Promise<Object> {
+        if (id) {
+            const isUpdate = await this.notiService.updateSeenById(+id);
+
+            if (isUpdate.affected !== 0) {
+                return {
+                    message: 'success',
+                    statusCode: HttpStatus.OK,
+                };
+            } else {
+                return {
+                    message: 'error',
+                    statusCode: HttpStatus.BAD_REQUEST,
+                };
+            }
+        }
+
+        return {
+            message: 'not matches path',
+            statusCode: HttpStatus.NOT_FOUND,
         };
     }
 }

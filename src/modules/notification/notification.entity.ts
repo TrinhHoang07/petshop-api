@@ -29,7 +29,9 @@ export class Notification extends BaseEntity {
     })
     seen: boolean;
 
-    @CreateDateColumn()
+    @CreateDateColumn({
+        type: 'timestamp',
+    })
     created_at: Date;
 
     @UpdateDateColumn()

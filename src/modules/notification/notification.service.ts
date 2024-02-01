@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Notification } from './notification.entity';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { NotiCreateDto } from './dto/noti-create.req.dto';
 
 @Injectable()
@@ -23,6 +23,7 @@ export class NotificationService {
             .addSelect('noti.created_at', 'created_at')
             .innerJoin('customers', 'cus', 'cus.id=noti.customer_id')
             .where('noti.customer_id=:id', { id })
+            .orderBy('noti.created_at', 'DESC')
             .getRawMany();
     }
 
@@ -33,5 +34,11 @@ export class NotificationService {
         noti.customer_ = data.customer_id;
 
         return await this.notification.save(noti);
+    }
+
+    async updateSeenById(id: number): Promise<UpdateResult> {
+        return await this.notification.update(id, {
+            seen: true,
+        });
     }
 }
