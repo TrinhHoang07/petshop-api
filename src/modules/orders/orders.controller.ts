@@ -77,9 +77,9 @@ export class OrdersController {
     }
 
     // test API
-    @Get('/statistical-api')
-    async testApi() {
-        const data = await this.ordersService.testApi(2023);
+    @Get('/statistical-api/:year')
+    async testApi(@Param('year') year: string) {
+        const data = await this.ordersService.testApi(+year);
 
         if (data) {
             return {
