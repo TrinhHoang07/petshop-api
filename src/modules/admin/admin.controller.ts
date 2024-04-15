@@ -250,4 +250,21 @@ export class AdminController {
             };
         }
     }
+
+    @Delete('orders/delete/:id')
+    async deleteOrderById(@Param('id') id: string): Promise<Object> {
+        const isDeleted = await this.ordersService.deleteOrderById(+id);
+
+        if (isDeleted.affected !== 0) {
+            return {
+                message: 'success',
+                statusCode: HttpStatus.OK,
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: HttpStatus.BAD_REQUEST,
+            };
+        }
+    }
 }

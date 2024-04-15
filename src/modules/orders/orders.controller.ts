@@ -1,4 +1,15 @@
-import { Controller, UseGuards, UsePipes, ValidationPipe, Post, HttpStatus, Body, Get, Param } from '@nestjs/common';
+import {
+    Controller,
+    UseGuards,
+    UsePipes,
+    ValidationPipe,
+    Post,
+    HttpStatus,
+    Body,
+    Get,
+    Param,
+    Delete,
+} from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { AuthGuard } from '@nestjs/passport';
 import { OrdersAddReqDto } from './dto/orders-add.req.dto';
@@ -38,6 +49,43 @@ export class OrdersController {
                 message: 'success',
                 statusCode: HttpStatus.OK,
                 data: result,
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: HttpStatus.BAD_REQUEST,
+            };
+        }
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Delete('/delete/:id')
+    async deleteOrderById(@Param('id') id: string): Promise<Object> {
+        const result = await this.ordersService.deleteOrderById(+id);
+
+        if (result.affected !== 0) {
+            return {
+                message: 'success',
+                statusCode: HttpStatus.OK,
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: HttpStatus.BAD_REQUEST,
+            };
+        }
+    }
+
+    // test API
+    @Get('/statistical-api')
+    async testApi() {
+        const data = await this.ordersService.testApi(2023);
+
+        if (data) {
+            return {
+                message: 'success',
+                statusCode: HttpStatus.OK,
+                data,
             };
         } else {
             return {
