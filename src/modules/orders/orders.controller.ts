@@ -9,10 +9,12 @@ import {
     Get,
     Param,
     Delete,
+    Put,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { AuthGuard } from '@nestjs/passport';
 import { OrdersAddReqDto } from './dto/orders-add.req.dto';
+import { OrdersUpdateStatusReqDto } from './dto/orders-update-status.req.dto';
 
 @Controller('orders')
 export class OrdersController {
@@ -64,6 +66,27 @@ export class OrdersController {
         const result = await this.ordersService.deleteOrderById(+id);
 
         if (result.affected !== 0) {
+            return {
+                message: 'success',
+                statusCode: HttpStatus.OK,
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: HttpStatus.BAD_REQUEST,
+            };
+        }
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Put('status/:id')
+    async updateStatusOrder(
+        @Param('id') id: string,
+        @Body(new ValidationPipe()) data: OrdersUpdateStatusReqDto,
+    ): Promise<Object> {
+        const isUpdated = await this.ordersService.updateStatus(+id, data);
+
+        if (isUpdated.affected === 1) {
             return {
                 message: 'success',
                 statusCode: HttpStatus.OK,
