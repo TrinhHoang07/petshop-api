@@ -1,0 +1,41 @@
+version: '1.0'
+
+services:
+    dev:
+        container_name: petshop-api-dev
+        image: petshop-api-dev:1.0.0
+        build:
+            context: .
+            target: development
+            dockerfile: ./Dockerfile
+        command: npm run start:dev
+        depends_on:
+            mysql:
+                condition: service_healthy
+        ports:
+            - 3009:3009
+        networks:
+            - pet-api-networks
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        environment:
+            - DB_USERNAME=root
+            - DB_PASSWORD=root
+            - DB_HOST=host.docker.internal
+            - DB_DATABASE=petshop
+    mysql:
+        image: mysql:8.0-debian
+        ports:
+            - 3306:3306
+        volumes:
+            - ./data:/docker-entrypoint-initdb.d
+        environment:
+            - MYSQL_PASSWORD=root
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=petshop
+            - TZ=Asia/Ho_Chi_Minh
+        healthcheck:
+            test: 'exit 0'
+networks:
+    pet-api-networks:
