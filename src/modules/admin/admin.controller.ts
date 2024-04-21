@@ -267,4 +267,31 @@ export class AdminController {
             };
         }
     }
+
+    // test API
+    @Get('/statistical-api/:year')
+    async testApi(@Param('year') year: string) {
+        const data = await this.ordersService.testApi(+year);
+        const totalCustomers = (await this.customerService.getAll()).length;
+        const totalOrders = (await this.ordersService.getAllOrders()).length;
+        const totalproducts = (await this.productsService.getAll()).length;
+
+        if (data && totalproducts && totalCustomers && totalOrders) {
+            return {
+                message: 'success',
+                statusCode: HttpStatus.OK,
+                data: {
+                    ...data,
+                    totalCustomers,
+                    totalproducts,
+                    totalOrders,
+                },
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: HttpStatus.BAD_REQUEST,
+            };
+        }
+    }
 }

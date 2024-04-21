@@ -79,57 +79,87 @@ export class OrdersService {
     // test API
     async testApi(year: number) {
         return {
-            test: await this.ordersService
+            dataSetChart: [
+                {
+                    data: await this.ordersService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 1 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.ordersService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 2 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.ordersService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 3 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.ordersService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 4 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.ordersService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 5 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.ordersService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 6 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.ordersService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 7 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.ordersService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 8 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.ordersService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 9 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.ordersService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 10 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.ordersService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 11 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.ordersService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 12 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+            ],
+            dataSetWeek: await this.ordersService
                 .createQueryBuilder('q')
                 .where('YEARWEEK(q.created_at, 1) = YEARWEEK(CURDATE(), 1)')
                 .getRawMany(),
-            1: await this.ordersService
+            totalOrdersaToday: await this.ordersService
                 .createQueryBuilder('q')
-                .where(`MONTH(q.created_at) = 1 AND YEAR(q.created_at) = ${year}`)
-                .getRawMany(),
-            2: await this.ordersService
-                .createQueryBuilder('q')
-                .where(`MONTH(q.created_at) = 2 AND YEAR(q.created_at) = ${year}`)
-                .getRawMany(),
-            3: await this.ordersService
-                .createQueryBuilder('q')
-                .where(`MONTH(q.created_at) = 3 AND YEAR(q.created_at) = ${year}`)
-                .getRawMany(),
-            4: await this.ordersService
-                .createQueryBuilder('q')
-                .where(`MONTH(q.created_at) = 4 AND YEAR(q.created_at) = ${year}`)
-                .getRawMany(),
-            5: await this.ordersService
-                .createQueryBuilder('q')
-                .where(`MONTH(q.created_at) = 5 AND YEAR(q.created_at) = ${year}`)
-                .getRawMany(),
-            6: await this.ordersService
-                .createQueryBuilder('q')
-                .where(`MONTH(q.created_at) = 6 AND YEAR(q.created_at) = ${year}`)
-                .getRawMany(),
-            7: await this.ordersService
-                .createQueryBuilder('q')
-                .where(`MONTH(q.created_at) = 7 AND YEAR(q.created_at) = ${year}`)
-                .getRawMany(),
-            8: await this.ordersService
-                .createQueryBuilder('q')
-                .where(`MONTH(q.created_at) = 8 AND YEAR(q.created_at) = ${year}`)
-                .getRawMany(),
-            9: await this.ordersService
-                .createQueryBuilder('q')
-                .where(`MONTH(q.created_at) = 9 AND YEAR(q.created_at) = ${year}`)
-                .getRawMany(),
-            10: await this.ordersService
-                .createQueryBuilder('q')
-                .where(`MONTH(q.created_at) = 10 AND YEAR(q.created_at) = ${year}`)
-                .getRawMany(),
-            11: await this.ordersService
-                .createQueryBuilder('q')
-                .where(`MONTH(q.created_at) = 11 AND YEAR(q.created_at) = ${year}`)
-                .getRawMany(),
-            12: await this.ordersService
-                .createQueryBuilder('q')
-                .where(`MONTH(q.created_at) = 12 AND YEAR(q.created_at) = ${year}`)
+                .where('DATE(q.created_at) = CURDATE()')
                 .getRawMany(),
         };
     }
