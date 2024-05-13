@@ -7,9 +7,10 @@ import { CustomersModule } from '../customers/customers.module';
 import { jwtConfig } from 'src/config/jwt.config';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
+import { AdminModule } from '../admin/admin.module';
 
 @Module({
-    imports: [CustomersModule, PassportModule, JwtModule.register(jwtConfig)],
+    imports: [AdminModule, CustomersModule, PassportModule, JwtModule.register(jwtConfig)],
     controllers: [AuthController],
     providers: [AuthService, LocalStrategy, JwtStrategy],
     exports: [AuthService],

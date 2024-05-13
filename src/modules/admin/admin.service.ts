@@ -20,4 +20,11 @@ export class AdminService {
     async getAllAdmin(): Promise<Admin[]> {
         return await this.adminEntity.find();
     }
+
+    async getAdminByUsernameAndPassword(username: string, password: string) {
+        return await this.adminEntity.findOneBy({
+            name: username,
+            password: password,
+        });
+    }
 }

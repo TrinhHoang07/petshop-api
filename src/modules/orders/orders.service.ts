@@ -155,6 +155,14 @@ export class OrdersService {
             ],
             dataSetWeek: await this.ordersService
                 .createQueryBuilder('q')
+                .addSelect('product.name', 'product_name')
+                .addSelect('product.description', 'product_description')
+                .addSelect('product.price', 'product_price')
+                .addSelect('product.preview_url', 'product_preview_url')
+                .addSelect('product.type', 'product_type')
+                .addSelect('product.rate', 'product_rate')
+                .addSelect('product.color', 'product_color')
+                .innerJoin('products', 'product', 'product.id=q.product_id')
                 .where('YEARWEEK(q.created_at, 1) = YEARWEEK(CURDATE(), 1)')
                 .getRawMany(),
             totalOrdersaToday: await this.ordersService
