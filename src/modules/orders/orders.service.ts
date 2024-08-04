@@ -32,15 +32,24 @@ export class OrdersService {
     }
 
     // add new orders (customers)
-    async addOrder(order: OrdersAddReqDto): Promise<Orders> {
-        const newOrder = new Orders();
-        newOrder.product_ = order.product_id;
-        newOrder.customer_ = order.customer_id;
-        newOrder.price = order.price;
-        newOrder.quantity = order.quantity;
-        newOrder.status = order.status;
+    async addOrder(order: OrdersAddReqDto[]): Promise<Orders[]> {
+        const arrOrder = [];
+        if (order.length > 0) {
+            order.forEach((item) => {
+                const orderItem = new Orders();
+                orderItem.product_ = item.product_id;
+                orderItem.customer_ = item.customer_id;
+                orderItem.price = item.price;
+                orderItem.quantity = item.quantity;
+                orderItem.status = item.status;
 
-        return await this.ordersService.save(newOrder);
+                arrOrder.push(orderItem);
+            });
+        }
+
+        const orders = Orders.create(arrOrder);
+
+        return await Orders.save(orders);
     }
 
     // update status (admin, shiper)

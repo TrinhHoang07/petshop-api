@@ -73,7 +73,7 @@ export class CartsController {
         if (id) {
             const result = await this.cartsService.deleteById(+id);
 
-            if (result.affected === 1) {
+            if (result.affected !== 0) {
                 return {
                     message: 'success',
                     code: HttpStatus.OK,

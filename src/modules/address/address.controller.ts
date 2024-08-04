@@ -34,13 +34,13 @@ export class AddressController {
         }
     }
 
-    @UseGuards(AuthGuard('jwt'))
-    @UsePipes(new ValidationPipe())
-    @Post('/create')
-    async createAddress(@Body() data: AddressCreateDto): Promise<Object> {
-        const address = await this.customerService.createCustomer(data);
+    @UseGuards(AuthGuard('jwt')) // yêu cầu người dùng đã đăng nhập và có token kèm theo mới có thể dùng chức năng 
+    @UsePipes(new ValidationPipe()) // yêu cầu phải có data gửi lên và data gửi lên phải có format như trong "AddressCreateDto - ctrl click để "
+    @Post('/create') // phương thức gửi lên server - POST 
+    async createAddress(@Body() data: AddressCreateDto): Promise<Object> { // hàm xử lý tạo mới địa chỉ - trả về 1 object 
+        const address = await this.customerService.createCustomer(data); // this.customerService.createCustomer - là 1 hàm xử lý tạo mới 1 trường trong database  
 
-        if (address) {
+        if (address) { // nếu có địa chỉ (Thành ) - trả về message success kèm 
             return {
                 message: 'success',
                 statusCode: HttpStatus.OK,
@@ -48,16 +48,16 @@ export class AddressController {
             };
         }
 
-        return {
+        return { // nếu không thành công thì trả về error lỗi
             message: 'error',
             statusCode: HttpStatus.BAD_REQUEST,
         };
     }
 
-    @UseGuards(AuthGuard('jwt'))
-    @Get('/address/:id')
-    async getAddressById(@Param('id') id: string): Promise<Object> {
-        const addresses = await this.customerService.getAddressByCustomerId(+id);
+    @UseGuards(AuthGuard('jwt')) // yêu cầu người dùng đã đăng nhập và có token kèm theo mới có thể dùng chức năng
+    @Get('/address/:id') // phương thức gửi lên server - GET 
+    async getAddressById(@Param('id') id: string): Promise<Object> { // hàm xử lý lấy địa chỉ theo id - người dùng truyền params id lên (https://facebook.com/profile/344 - thì 344 là params ID)
+        const addresses = await this.customerService.getAddressByCustomerId(+id); // hàm lấy trong service xử lý lấy 1 trường trong database
 
         if (addresses) {
             return {

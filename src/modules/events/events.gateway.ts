@@ -29,6 +29,11 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.emit(`add-to-cart-give`, payload);
     }
 
+    @SubscribeMessage('delete-to-cart')
+    async handleDeleteToCart(@MessageBody() payload) {
+        this.server.emit(`delete-to-cart-give`, payload);
+    }
+
     @SubscribeMessage('create-address')
     async handleCreateAddress(@MessageBody() payload) {
         this.server.emit(`create-address-give`, payload);

@@ -11,10 +11,10 @@ export class PaymentController {
     constructor(private paymentService: PaymentService) {}
 
     @Post('/order/create')
-    async test(@Body() data: any) {
+    async test(@Body() data: any[]) {
         const payment = await this.paymentService.addNewPayment(data);
 
-        if (payment.id) {
+        if (payment) {
             return {
                 message: 'success',
                 statusCode: HttpStatus.OK,

@@ -23,8 +23,9 @@ export class OrdersController {
     @UseGuards(AuthGuard('jwt'))
     @Post('/create')
     @UsePipes(new ValidationPipe())
-    async createOrder(@Body() data: OrdersAddReqDto): Promise<Object> {
+    async createOrder(@Body() data: OrdersAddReqDto[]): Promise<Object> {
         const result = await this.ordersService.addOrder(data);
+        console.log(result);
 
         if (result) {
             return {

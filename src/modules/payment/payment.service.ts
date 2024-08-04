@@ -7,12 +7,21 @@ import { Repository, UpdateResult } from 'typeorm';
 export class PaymentService {
     constructor(@InjectRepository(Payment) private paymentEntity: Repository<Payment>) {}
 
-    async addNewPayment(data: any): Promise<Payment> {
-        const payment = new Payment();
-        payment.state = data.state;
-        payment.order_ = data.order_id;
+    async addNewPayment(data: any[]): Promise<Payment[]> {
+        const arrPayment = [];
+        if (data.length > 0) {
+            data.forEach((item) => {
+                const payment = new Payment();
+                payment.state = item.state;
+                payment.order_ = item.order_id;
 
-        return await this.paymentEntity.save(payment);
+                arrPayment.push(payment);
+            });
+        }
+
+        const payments = Payment.create(arrPayment);
+
+        return await Payment.save(payments);
     }
 
     async getPaymentById(paymentId: number): Promise<Payment> {
