@@ -52,7 +52,20 @@ export class AdminController {
     @Post('/blogs/create')
     @UsePipes(new ValidationPipe())
     async createBlog(@Body() data: BlogsReqDto) {
-        return this.blogsService.createBlog(data);
+        const blog = await this.blogsService.createBlog(data);
+
+        if (blog) {
+            return {
+                message: 'success',
+                code: HttpStatus.OK,
+                data: blog,
+            };
+        }
+
+        return {
+            message: 'error',
+            code: HttpStatus.BAD_REQUEST,
+        };
     }
 
     @Put('/blogs/update/:id')
@@ -63,7 +76,7 @@ export class AdminController {
         if (id) {
             const isUpdated = await this.blogsService.updateBlogById(+id, data);
 
-            if (isUpdated.affected === 1) {
+            if (isUpdated.affected !== 0) {
                 const data = await this.blogsService.getBlogById(+id);
 
                 if (data)
@@ -91,7 +104,7 @@ export class AdminController {
         if (id) {
             const isDeleted = await this.blogsService.deleteBlogById(+id);
 
-            if (isDeleted.affected === 1) {
+            if (isDeleted.affected !== 0) {
                 return {
                     message: 'success',
                     code: HttpStatus.OK,
@@ -133,7 +146,7 @@ export class AdminController {
         if (id) {
             const isDeleted = await this.customerService.deleteCustomerById(+id);
 
-            if (isDeleted.affected === 1) {
+            if (isDeleted.affected !== 0) {
                 return {
                     message: 'success',
                     code: HttpStatus.OK,
@@ -178,7 +191,7 @@ export class AdminController {
         if (id) {
             const isUpdated = await this.productsService.updateProductById(+id, data);
 
-            if (isUpdated.affected === 1) {
+            if (isUpdated.affected !== 0) {
                 const data = await this.productsService.getProductById(+id);
 
                 if (data)
@@ -205,7 +218,7 @@ export class AdminController {
         if (id) {
             const isDeleted = await this.productsService.deleteProductById(+id);
 
-            if (isDeleted.affected === 1) {
+            if (isDeleted.affected !== 0) {
                 return {
                     message: 'success',
                     code: HttpStatus.OK,
@@ -238,7 +251,7 @@ export class AdminController {
     ): Promise<Object> {
         const isUpdated = await this.ordersService.updateStatus(+id, data);
 
-        if (isUpdated.affected === 1) {
+        if (isUpdated.affected !== 0) {
             return {
                 message: 'success',
                 statusCode: HttpStatus.OK,

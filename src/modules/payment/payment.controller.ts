@@ -48,6 +48,7 @@ export class PaymentController {
 
     @Put('/order/update/:id')
     async testPut(@Param('id') id: string, @Body() data: any) {
+        console.log('updatreahgafdahdsfdfsafdfgsad: ', id);
         const update = await this.paymentService.updatePaymentStateById(+id, data.state);
 
         if (update.affected !== 0) {
@@ -91,7 +92,7 @@ export class PaymentController {
         vnp_Params['vnp_Locale'] = 'vn';
         vnp_Params['vnp_CurrCode'] = currCode;
         vnp_Params['vnp_TxnRef'] = orderId;
-        vnp_Params['vnp_OrderInfo'] = data.pay_id;
+        vnp_Params['vnp_OrderInfo'] = JSON.stringify(data.pay_id);
         vnp_Params['vnp_OrderType'] = 'other';
         vnp_Params['vnp_Amount'] = amount * 100;
         vnp_Params['vnp_ReturnUrl'] = returnUrl;
@@ -117,6 +118,7 @@ export class PaymentController {
 
     @Get('/vnpay_return')
     async returnPayment(@Req() req: Request) {
+        console.log('callled');
         let vnp_Params = req.query;
         const secureHash = vnp_Params['vnp_SecureHash'];
         delete vnp_Params['vnp_SecureHash'];
@@ -130,22 +132,26 @@ export class PaymentController {
         const signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
 
         if (secureHash === signed) {
-            if (vnp_Params['vnp_ResponseCode'] === '00') {
-                const updated = await this.paymentService.updatePaymentStateById(+vnp_Params['vnp_OrderInfo'], '00');
+            const ids = JSON.parse(decodeURIComponent(vnp_Params['vnp_OrderInfo'] as string));
+            let message = '';
+            if (ids?.length > 0) {
+                ids?.forEach(async (item) => {
+                    if (vnp_Params['vnp_ResponseCode'] === '00') {
+                        const updated = await this.paymentService.updatePaymentStateById(item, '00');
 
-                if (updated.affected !== 0) {
-                    return {
-                        message: 'Thanh toan thanh cong!',
-                    };
-                }
-            } else {
-                await this.paymentService.updatePaymentStateById(+vnp_Params['vnp_OrderInfo'], '03');
-                return {
-                    message: 'Thanh toan that bai',
-                };
+                        if (updated.affected !== 0) {
+                            message = 'Thanh toan thanh cong!';
+                        } else {
+                            await this.paymentService.updatePaymentStateById(item, '03');
+                            message = 'Thanh toan that bai';
+                        }
+                    }
+                });
+
+                return message;
             }
         } else {
-            await this.paymentService.updatePaymentStateById(+vnp_Params['vnp_OrderInfo'], '97');
+            await this.paymentService.updatePaymentStateById(+vnp_Params['vnp_OrderInfo'][0], '97');
             return {
                 message: 'That bai, check sum failed',
             };

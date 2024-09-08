@@ -7,5 +7,8 @@ export class BlogsReqDto {
     @IsNotEmpty()
     description: string;
 
+    @IsNotEmpty()
+    content: string;
+
     preview_url: string;
 }

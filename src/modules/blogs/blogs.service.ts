@@ -17,6 +17,7 @@ export class BlogsService {
     async createBlog(data: BlogsReqDto) {
         const blog = new Blogs();
         blog.title = data.title;
+        blog.content = data.content;
         blog.description = data.description;
         blog.preview_url = data.preview_url;
 

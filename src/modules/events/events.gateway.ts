@@ -61,6 +61,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     @SubscribeMessage('messageToUser')
     async handleMessageUser(@MessageBody() payload) {
+        console.log('messageToUser: ', payload);
         this.server.socketsJoin(payload.id);
         this.server.in(`${payload.id}`).emit(`${payload.id}`, {
             id: payload.id,
@@ -72,6 +73,8 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     @SubscribeMessage('messageToAdmin')
     async handleMessageAdmin(@MessageBody() payload) {
+        console.log(payload);
+
         this.server.emit(`user_sent`, {
             id: payload.id,
             name: payload.name,

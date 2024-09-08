@@ -8,6 +8,8 @@ export class PaymentService {
     constructor(@InjectRepository(Payment) private paymentEntity: Repository<Payment>) {}
 
     async addNewPayment(data: any[]): Promise<Payment[]> {
+        console.log('adding new payment', data);
+
         const arrPayment = [];
         if (data.length > 0) {
             data.forEach((item) => {

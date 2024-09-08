@@ -28,6 +28,11 @@ export class Blogs extends BaseEntity {
     @Column({
         type: 'text',
     })
+    content: string;
+
+    @Column({
+        type: 'varchar',
+    })
     description: string;
 
     @CreateDateColumn()
