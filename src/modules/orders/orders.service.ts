@@ -58,6 +58,29 @@ export class OrdersService {
     }
 
     // get orders by customer_id
+    async getOrderById(orderId: number): Promise<Orders> {
+        return await this.ordersService
+            .createQueryBuilder('orders')
+            .addSelect('product.name', 'product_name')
+            .addSelect('product.description', 'product_description')
+            .addSelect('product.price', 'product_price')
+            .addSelect('product.preview_url', 'product_preview_url')
+            .addSelect('product.type', 'product_type')
+            .addSelect('product.rate', 'product_rate')
+            .addSelect('product.color', 'product_color')
+            .addSelect('customer.name', 'customer_name')
+            .addSelect('customer.address', 'customer_address')
+            .addSelect('customer.phone_number', 'customer_phone_number')
+            .addSelect('customer.birth_date', 'customer_birth_date')
+            .addSelect('customer.avatar_path', 'customer_avatar_path')
+            .addSelect('customer.gender', 'customer_gender')
+            .innerJoin('products', 'product', 'product.id=orders.product_id')
+            .innerJoin('customers', 'customer', 'customer.id=orders.customer_id')
+            .where(`orders.id=${orderId}`)
+            .getRawOne();
+    }
+
+    // get orders by customer_id
     async getOrdersByCustomerId(customerId: number): Promise<Orders[]> {
         return await this.ordersService
             .createQueryBuilder('orders')

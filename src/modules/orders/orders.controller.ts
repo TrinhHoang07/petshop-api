@@ -42,6 +42,26 @@ export class OrdersController {
     }
 
     @UseGuards(AuthGuard('jwt'))
+    @Get('/get-order/:id')
+    @UsePipes(new ValidationPipe())
+    async getOrderById(@Param('id') id: string): Promise<Object> {
+        const result = await this.ordersService.getOrderById(+id);
+
+        if (result) {
+            return {
+                message: 'success',
+                statusCode: HttpStatus.OK,
+                data: result,
+            };
+        } else {
+            return {
+                message: 'error',
+                statusCode: HttpStatus.BAD_REQUEST,
+            };
+        }
+    }
+
+    @UseGuards(AuthGuard('jwt'))
     @Get('/get-order-id/:id')
     @UsePipes(new ValidationPipe())
     async getOrderByCustomerId(@Param('id') id: string): Promise<Object> {
