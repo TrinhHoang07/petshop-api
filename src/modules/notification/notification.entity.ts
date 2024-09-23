@@ -9,6 +9,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { Customers } from '../customers/customers.entity';
+import { Admin } from '../admin/admin.entity';
 
 @Entity('notifications')
 export class Notification extends BaseEntity {
@@ -17,6 +18,12 @@ export class Notification extends BaseEntity {
 
     @ManyToOne(() => Customers, (cus) => cus.id)
     customer_: number;
+
+    @Column({
+        nullable: true,
+        type: 'varchar',
+    })
+    type: string;
 
     @Column()
     content: string;

@@ -27,11 +27,16 @@ export class PaymentService {
     }
 
     async getPaymentById(paymentId: number): Promise<Payment> {
-        return await this.paymentEntity.findOne({
-            where: {
-                id: paymentId,
-            },
-        });
+        return await this.paymentEntity
+            .createQueryBuilder('payment')
+            .addSelect('order.id', 'order_id')
+            .addSelect('payment.id', 'id')
+            .addSelect('payment.state', 'state')
+            .addSelect('payment.created_at', 'created_at')
+            .addSelect('payment.updated_at', 'updated_at')
+            .innerJoin('orders', 'order', 'order.id=payment.order_id')
+            .where('payment.id = :id', { id: paymentId })
+            .getRawOne();
     }
 
     async updatePaymentStateById(paymentId: number, paymentState: string): Promise<UpdateResult> {

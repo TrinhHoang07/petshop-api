@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { Products } from '../products/products.entity';
 import { Customers } from '../customers/customers.entity';
+import { Address } from '../address/address.entity';
 
 @Entity('orders')
 export class Orders extends BaseEntity {
@@ -21,6 +22,9 @@ export class Orders extends BaseEntity {
 
     @ManyToOne(() => Customers, (cus) => cus.id)
     customer_: number;
+
+    @ManyToOne(() => Address, (add) => add.id)
+    address_: number;
 
     @Column({
         type: 'int',

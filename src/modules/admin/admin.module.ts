@@ -8,9 +8,17 @@ import { BlogsModule } from '../blogs/blogs.module';
 import { CustomersModule } from '../customers/customers.module';
 import { ProductsModule } from '../products/products.module';
 import { OrdersModule } from '../orders/orders.module';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Admin]), BlogsModule, CustomersModule, ProductsModule, OrdersModule],
+    imports: [
+        TypeOrmModule.forFeature([Admin]),
+        BlogsModule,
+        CustomersModule,
+        ProductsModule,
+        OrdersModule,
+        NotificationModule,
+    ],
     controllers: [AdminController],
     providers: [AdminService],
     exports: [AdminService],

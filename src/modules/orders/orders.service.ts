@@ -20,14 +20,17 @@ export class OrdersService {
             .addSelect('product.type', 'product_type')
             .addSelect('product.rate', 'product_rate')
             .addSelect('product.color', 'product_color')
+            .addSelect('address.full_name', 'address_full_name')
+            .addSelect('address.main_address', 'address_main')
+            .addSelect('address.detail_address', 'address_detail')
+            .addSelect('address.phone_number', 'address_phone_number')
             .addSelect('customer.name', 'customer_name')
-            .addSelect('customer.address', 'customer_address')
-            .addSelect('customer.phone_number', 'customer_phone_number')
             .addSelect('customer.birth_date', 'customer_birth_date')
             .addSelect('customer.avatar_path', 'customer_avatar_path')
             .addSelect('customer.gender', 'customer_gender')
             .innerJoin('products', 'product', 'product.id=orders.product_id')
             .innerJoin('customers', 'customer', 'customer.id=orders.customer_id')
+            .innerJoin('address', 'address', 'address.id=orders.address_id')
             .getRawMany();
     }
 
@@ -39,6 +42,7 @@ export class OrdersService {
                 const orderItem = new Orders();
                 orderItem.product_ = item.product_id;
                 orderItem.customer_ = item.customer_id;
+                orderItem.address_ = item.address_id;
                 orderItem.price = item.price;
                 orderItem.quantity = item.quantity;
                 orderItem.status = item.status;
@@ -68,14 +72,17 @@ export class OrdersService {
             .addSelect('product.type', 'product_type')
             .addSelect('product.rate', 'product_rate')
             .addSelect('product.color', 'product_color')
+            .addSelect('address.full_name', 'address_full_name')
+            .addSelect('address.main_address', 'address_main')
+            .addSelect('address.detail_address', 'address_detail')
+            .addSelect('address.phone_number', 'address_phone_number')
             .addSelect('customer.name', 'customer_name')
-            .addSelect('customer.address', 'customer_address')
-            .addSelect('customer.phone_number', 'customer_phone_number')
             .addSelect('customer.birth_date', 'customer_birth_date')
             .addSelect('customer.avatar_path', 'customer_avatar_path')
             .addSelect('customer.gender', 'customer_gender')
             .innerJoin('products', 'product', 'product.id=orders.product_id')
             .innerJoin('customers', 'customer', 'customer.id=orders.customer_id')
+            .innerJoin('address', 'address', 'address.id=orders.address_id')
             .where(`orders.id=${orderId}`)
             .getRawOne();
     }
@@ -91,14 +98,17 @@ export class OrdersService {
             .addSelect('product.type', 'product_type')
             .addSelect('product.rate', 'product_rate')
             .addSelect('product.color', 'product_color')
+            .addSelect('address.full_name', 'address_full_name')
+            .addSelect('address.main_address', 'address_main')
+            .addSelect('address.detail_address', 'address_detail')
+            .addSelect('address.phone_number', 'address_phone_number')
             .addSelect('customer.name', 'customer_name')
-            .addSelect('customer.address', 'customer_address')
-            .addSelect('customer.phone_number', 'customer_phone_number')
             .addSelect('customer.birth_date', 'customer_birth_date')
             .addSelect('customer.avatar_path', 'customer_avatar_path')
             .addSelect('customer.gender', 'customer_gender')
             .innerJoin('products', 'product', 'product.id=orders.product_id')
             .innerJoin('customers', 'customer', 'customer.id=orders.customer_id')
+            .innerJoin('address', 'address', 'address.id=orders.address_id')
             .where(`orders.customer_id=${customerId}`)
             .getRawMany();
     }

@@ -79,4 +79,84 @@ export class ProductsService {
             id: id,
         });
     }
+
+    // test API
+    async testApi(year: number) {
+        return {
+            dataSetChart: [
+                {
+                    data: await this.productsService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 1 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.productsService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 2 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.productsService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 3 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.productsService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 4 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.productsService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 5 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.productsService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 6 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.productsService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 7 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.productsService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 8 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.productsService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 9 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.productsService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 10 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.productsService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 11 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+                {
+                    data: await this.productsService
+                        .createQueryBuilder('q')
+                        .where(`MONTH(q.created_at) = 12 AND YEAR(q.created_at) = ${year}`)
+                        .getRawMany(),
+                },
+            ],
+        };
+    }
 }

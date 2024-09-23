@@ -1,31 +1,18 @@
-import {
-    Controller,
-    Post,
-    Body,
-    Get,
-    ValidationPipe,
-    Put,
-    Param,
-    Res,
-    UsePipes,
-    HttpStatus,
-    Delete,
-} from '@nestjs/common';
+import { Controller, Post, Body, Get, ValidationPipe, Put, Param, UsePipes, HttpStatus, Delete } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AdminRegisterReqDto } from './dto/admin-register.req.dto';
 import { Admin } from './admin.entity';
 import { BlogsService } from '../blogs/blogs.service';
 import { BlogsReqDto } from '../blogs/dto/blogs.req.dto';
 import { UpdateResult } from 'typeorm';
-import { Response } from 'express';
 import { CustomersService } from '../customers/customers.service';
 import { Customers } from '../customers/customers.entity';
 import { ProductsService } from '../products/products.service';
 import { ProductsReqDto } from '../products/dto/products.req.dto';
-import { Products } from '../products/products.entity';
 import { CustomerCreateDto } from '../customers/dto/customer-create.req.dto';
 import { OrdersService } from '../orders/orders.service';
 import { OrdersUpdateStatusReqDto } from '../orders/dto/orders-update-status.req.dto';
+import { NotificationService } from '../notification/notification.service';
 
 @Controller('admin')
 export class AdminController {
@@ -35,6 +22,7 @@ export class AdminController {
         private customerService: CustomersService,
         private productsService: ProductsService,
         private ordersService: OrdersService,
+        private notiService: NotificationService,
     ) {}
 
     @Get('/all')
@@ -281,10 +269,35 @@ export class AdminController {
         }
     }
 
+    @Get('/notifications/all')
+    async getNotificationsByAdmin(): Promise<Object> {
+        const data = await this.notiService.getNotificationsAdmin('admin');
+
+        if (data) {
+            return {
+                message: 'success',
+                statusCode: HttpStatus.OK,
+                data,
+            };
+        }
+
+        return {
+            message: 'error',
+            statusCode: HttpStatus.BAD_REQUEST,
+        };
+
+        return {
+            message: 'not matches path',
+            statusCode: HttpStatus.NOT_FOUND,
+        };
+    }
+
     // test API
     @Get('/statistical-api/:year')
     async testApi(@Param('year') year: string) {
         const data = await this.ordersService.testApi(+year);
+        const dataCustomers = await this.customerService.testApi(+year);
+        const dataProducts = await this.productsService.testApi(+year);
         const totalCustomers = (await this.customerService.getAll()).length;
         const totalOrders = (await this.ordersService.getAllOrders()).length;
         const totalproducts = (await this.productsService.getAll()).length;
@@ -295,6 +308,8 @@ export class AdminController {
                 statusCode: HttpStatus.OK,
                 data: {
                     ...data,
+                    dataCustomers,
+                    dataProducts,
                     totalCustomers,
                     totalproducts,
                     totalOrders,

@@ -11,6 +11,9 @@ export class OrdersAddReqDto {
     product_id: number;
 
     @IsNotEmpty()
+    address_id: number;
+
+    @IsNotEmpty()
     quantity: number;
 
     status: string;

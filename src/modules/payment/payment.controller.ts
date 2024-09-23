@@ -5,10 +5,11 @@ import { sortObject } from 'src/utils/app.util';
 import * as querystring from 'qs';
 import * as crypto from 'crypto';
 import { PaymentService } from './payment.service';
+import { OrdersService } from '../orders/orders.service';
 
 @Controller('/payment')
 export class PaymentController {
-    constructor(private paymentService: PaymentService) {}
+    constructor(private paymentService: PaymentService, private orderService: OrdersService) {}
 
     @Post('/order/create')
     async test(@Body() data: any[]) {
@@ -69,6 +70,7 @@ export class PaymentController {
 
     @Post('/create')
     async createNewPayment(@Body() data: any, @Req() req: Request, res: Response) {
+        console.log('data', data);
         const date = new Date();
         const createDate = moment(date).format('YYYYMMDDHHmmss');
         const ipAddr =
@@ -92,7 +94,7 @@ export class PaymentController {
         vnp_Params['vnp_Locale'] = 'vn';
         vnp_Params['vnp_CurrCode'] = currCode;
         vnp_Params['vnp_TxnRef'] = orderId;
-        vnp_Params['vnp_OrderInfo'] = JSON.stringify(data.pay_id);
+        vnp_Params['vnp_OrderInfo'] = JSON.stringify(data?.pay_id ?? 0);
         vnp_Params['vnp_OrderType'] = 'other';
         vnp_Params['vnp_Amount'] = amount * 100;
         vnp_Params['vnp_ReturnUrl'] = returnUrl;
@@ -133,9 +135,11 @@ export class PaymentController {
 
         if (secureHash === signed) {
             const ids = JSON.parse(decodeURIComponent(vnp_Params['vnp_OrderInfo'] as string));
+            console.log('ids: ', ids);
             let message = '';
             if (ids?.length > 0) {
-                ids?.forEach(async (item) => {
+                for (const item of ids) {
+                    console.log('item: ', item);
                     if (vnp_Params['vnp_ResponseCode'] === '00') {
                         const updated = await this.paymentService.updatePaymentStateById(item, '00');
 
@@ -143,10 +147,23 @@ export class PaymentController {
                             message = 'Thanh toan thanh cong!';
                         } else {
                             await this.paymentService.updatePaymentStateById(item, '03');
+                            const data: any = await this.paymentService.getPaymentById(item);
+                            console.log('data: ', data);
+                            if (data.order_id) {
+                                await this.orderService.updateStatus(data.order_id, { status: 'cancel' });
+                            }
                             message = 'Thanh toan that bai';
                         }
+                    } else {
+                        await this.paymentService.updatePaymentStateById(item, '03');
+                        const data: any = await this.paymentService.getPaymentById(item);
+                        console.log('data: ', data);
+                        if (data.order_id) {
+                            await this.orderService.updateStatus(data.order_id, { status: 'cancel' });
+                        }
+                        message = 'Thanh toan that bai';
                     }
-                });
+                }
 
                 return message;
             }

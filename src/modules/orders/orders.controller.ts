@@ -15,10 +15,11 @@ import { OrdersService } from './orders.service';
 import { AuthGuard } from '@nestjs/passport';
 import { OrdersAddReqDto } from './dto/orders-add.req.dto';
 import { OrdersUpdateStatusReqDto } from './dto/orders-update-status.req.dto';
+import { NotificationService } from '../notification/notification.service';
 
 @Controller('orders')
 export class OrdersController {
-    constructor(private ordersService: OrdersService) {}
+    constructor(private ordersService: OrdersService, private notiService: NotificationService) {}
 
     @UseGuards(AuthGuard('jwt'))
     @Post('/create')
@@ -28,6 +29,14 @@ export class OrdersController {
         console.log(result);
 
         if (result) {
+            for (const item of result) {
+                await this.notiService.addNewNotification({
+                    content: `Bạn vừa có 1 đơn hàng mới với id là: ${item.id}`,
+                    avatar_path: '',
+                    type: 'admin',
+                });
+            }
+
             return {
                 message: 'success',
                 statusCode: HttpStatus.CREATED,

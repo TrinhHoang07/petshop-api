@@ -12,6 +12,12 @@ export class NotificationService {
         return await this.notification.find();
     }
 
+    async getNotificationsAdmin(type: string): Promise<Notification[]> {
+        return await this.notification.findBy({
+            type,
+        });
+    }
+
     async getNotificationById(id: number): Promise<Notification[]> {
         return await this.notification
             .createQueryBuilder('noti')
@@ -30,6 +36,7 @@ export class NotificationService {
     async addNewNotification(data: NotiCreateDto): Promise<Notification> {
         const noti = new Notification();
         noti.content = data.content;
+        noti.type = data.type;
         noti.avatar_path = data.avatar_path;
         noti.customer_ = data.customer_id;
 
